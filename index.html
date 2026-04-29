@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Client - ELSIE MONTCHO NOTAIRE INC.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --notaire-blue: #1346d4;
+            --notaire-dark: #1a1a1a;
+            --bg-gray: #f8fafc;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .step-active {
+            color: var(--notaire-blue);
+            border-bottom: 3px solid var(--notaire-blue);
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-notaire {
+            background-color: var(--notaire-blue);
+            transition: all 0.3s ease;
+        }
+
+        .btn-notaire:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input:focus {
+            border-color: var(--notaire-blue);
+            outline: none;
+            ring: 2px;
+            ring-color: var(--notaire-blue);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        input::placeholder {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header / Logo -->
+    <header class="bg-white border-b py-6">
+        <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-800">ELSIE MONTCHO <span style="color: var(--notaire-blue);">NOTAIRE INC.</span></h1>
+            <div class="text-sm text-gray-500 uppercase tracking-widest hidden md:block">Portail de transmission</div>
+        </div>
+    </header>
+
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-4xl mx-auto">
+            
+            <!-- Navigation des Étapes -->
+            <div class="flex justify-center mb-8 border-b border-gray-200">
+                <button id="tab1" class="px-6 py-4 font-semibold step-active transition-all text-sm md:text-base">
+                    1. Informations personnelles
+                </button>
+                <button id="tab2" class="px-6 py-4 font-semibold text-gray-400 cursor-not-allowed text-sm md:text-base" disabled>
+                    2. Documents à transmettre
+                </button>
+            </div>
+
+            <!-- Carte du Formulaire -->
+            <div class="bg-white rounded-2xl p-6 md:p-10 card-shadow fade-in">
+                
+                <form id="notaryForm">
+                    
+                    <!-- ÉTAPE 1 : INFOS PERSONNELLES -->
+                    <div id="step1Content">
+                        <h2 class="text-xl font-bold mb-8 text-gray-800 flex items-center">
+                            <i class="fas fa-user-circle mr-3 text-[#1346d4]"></i> Profil du client
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+                            <!-- Nom et Prénom -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nom *</label>
+                                <input type="text" id="lastName" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Votre nom de famille">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Prénom(s)</label>
+                                <input type="text" id="firstName" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Vos prénoms">
+                            </div>
+
+                            <!-- Date de Naissance et NAS -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date de naissance *</label>
+                                <input type="date" id="dob" required class="form-input w-full p-3 border border-gray-200 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro d'assurance sociale (NAS)</label>
+                                <input type="text" id="nas" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="000 000 000">
+                            </div>
+
+                            <!-- Adresse et Ville -->
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Adresse *</label>
+                                <input type="text" id="address" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Numéro civique et rue">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ville *</label>
+                                <input type="text" id="city" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: Montréal">
+                            </div>
+
+                            <!-- Province et Code Postal -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Province *</label>
+                                    <input type="text" id="province" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: Québec">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Code postal *</label>
+                                    <input type="text" id="postalCode" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="A1B 2C3">
+                                </div>
+                            </div>
+
+                            <!-- Téléphone et Courriel -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de téléphone *</label>
+                                <input type="tel" id="phone" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="514 000-0000">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Courriel *</label>
+                                <input type="email" id="email" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="exemple@courriel.com">
+                            </div>
+                        </div>
+
+                        <div class="mt-10 flex justify-end">
+                            <button type="button" onclick="goToStep2()" class="btn-notaire text-white px-12 py-4 rounded-full font-bold shadow-lg flex items-center">
+                                Continuer vers les documents <i class="fas fa-chevron-right ml-3 text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ÉTAPE 2 : DOCUMENTS -->
+                    <div id="step2Content" class="hidden">
+                        <h2 class="text-xl font-bold mb-4 text-gray-800">Sélection du dossier</h2>
+                        
+                        <div class="mb-10">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-2 text-[#1346d4]">Type de dossier concerné *</label>
+                            <select id="dossierType" onchange="generateUploadFields()" required class="form-input w-full p-4 border-2 border-gray-100 rounded-xl bg-gray-50 font-semibold text-gray-700">
+                                <option value="" disabled selected>Veuillez choisir un type de dossier...</option>
+                                <option value="recherche">Recherche testamentaire</option>
+                                <option value="testament">Testament / Mandat</option>
+                                <option value="achat">Achat / Vente</option>
+                                <option value="refinancement">Refinancement d'hypothèque</option>
+                            </select>
+                        </div>
+
+                        <div id="uploadContainer" class="hidden">
+                            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Documents à téléverser</h3>
+                            <div id="uploadArea" class="space-y-4">
+                                <!-- Injecté par JS -->
+                            </div>
+                        </div>
+
+                        <div class="mt-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                            <button type="button" onclick="goToStep1()" class="text-gray-400 font-bold hover:text-gray-600 transition-colors uppercase text-xs tracking-widest">
+                                <i class="fas fa-arrow-left mr-2"></i> Retour aux infos
+                            </button>
+                            <button type="submit" id="submitBtn" class="btn-notaire text-white w-full md:w-auto px-12 py-4 rounded-full font-bold shadow-xl">
+                                Terminer et envoyer le dossier
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <p class="text-center text-gray-400 text-xs mt-10">
+                <i class="fas fa-lock mr-1"></i> Vos données sont protégées par un chiffrement de bout en bout.
+            </p>
+        </div>
+    </main>
+
+    <!-- Modal de succès -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-10 max-w-sm w-full text-center shadow-2xl">
+            <div class="w-20 h-20 bg-cyan-50 text-[#1346d4] rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+                <i class="fas fa-paper-plane"></i>
+            </div>
+            <h3 class="text-2xl font-black mb-3 text-gray-800">C'est envoyé !</h3>
+            <p class="text-gray-500 leading-relaxed mb-8">Nous avons bien reçu vos informations. L'équipe d'<strong>ELSIE MONTCHO NOTAIRE INC.</strong> communiquera avec vous sous peu.</p>
+            <button onclick="location.reload()" class="btn-notaire text-white w-full py-4 rounded-2xl font-bold text-lg shadow-lg">Compris</button>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION : Vous pouvez modifier les noms des documents ici facilement
+        const docConfig = {
+            'recherche': [
+                'Certificat de décès officiel', 
+                'Recherche Chambre des Notaires', 
+                'Recherche Barreau du Québec'
+            ],
+            'testament': [
+                'Pièce d\'identité avec photo', 
+                'Deuxième pièce d\'identité', 
+                'Bilan patrimonial sommaire',
+                'Coordonnées des exécuteurs'
+            ],
+            'achat': [
+                'Offre d\'achat acceptée', 
+                'Certificat de localisation', 
+                'Contrat de mariage (si applicable)',
+                'Preuve d\'assurance habitation'
+            ],
+            'refinancement': [
+                'Dernier relevé hypothécaire', 
+                'Compte de taxes municipales', 
+                'Certificat de localisation à jour'
+            ]
+        };
+
+        function goToStep2() {
+            // Validation simple de l'étape 1
+            const required = ['lastName', 'dob', 'address', 'city', 'province', 'postalCode', 'phone', 'email'];
+            let valid = true;
+            required.forEach(id => {
+                if(!document.getElementById(id).value) {
+                    document.getElementById(id).classList.add('border-red-300');
+                    valid = false;
+                } else {
+                    document.getElementById(id).classList.remove('border-red-300');
+                }
+            });
+
+            if(!valid) {
+                alert("Veuillez remplir tous les champs obligatoires (*)");
+                return;
+            }
+
+            document.getElementById('step1Content').classList.add('hidden');
+            document.getElementById('step2Content').classList.remove('hidden');
+            document.getElementById('tab1').classList.remove('step-active');
+            document.getElementById('tab1').classList.add('text-gray-400');
+            document.getElementById('tab2').classList.add('step-active');
+            document.getElementById('tab2').classList.remove('text-gray-400');
+            window.scrollTo(0,0);
+        }
+
+        function generateUploadFields() {
+            const type = document.getElementById('dossierType').value;
+            const container = document.getElementById('uploadContainer');
+            const area = document.getElementById('uploadArea');
+            
+            if(!type) return;
+
+            container.classList.remove('hidden');
+            area.innerHTML = "";
+
+            docConfig[type].forEach(docName => {
+                const uniqueId = btoa(docName).substring(0, 8);
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-5 border border-gray-100 rounded-2xl bg-gray-50 hover:bg-white hover:border-[#1346d4] transition-all group";
+                div.innerHTML = `
+                    <div class="flex-grow">
+                        <p class="font-bold text-gray-700 text-sm">${docName}</p>
+                        <p id="label_${uniqueId}" class="text-xs text-gray-400 mt-1 italic">Aucun fichier sélectionné</p>
+                    </div>
+                    <input type="file" class="hidden" id="input_${uniqueId}" onchange="handleFile(this, '${uniqueId}')">
+                    <button type="button" onclick="document.getElementById('input_${uniqueId}').click()" 
+                            class="ml-4 px-4 py-2 border-2 border-gray-200 text-gray-400 rounded-xl text-xs font-black uppercase tracking-tighter group-hover:border-[#1346d4] group-hover:text-[#1346d4] transition-all">
+                        Choisir
+                    </button>
+                `;
+                area.appendChild(div);
+            });
+        }
+
+        function handleFile(input, id) {
+            const label = document.getElementById('label_' + id);
+            if(input.files.length > 0) {
+                label.innerText = "✓ " + input.files[0].name;
+                label.classList.remove('text-gray-400');
+                label.classList.add('text-green-500', 'font-bold');
+            }
+        }
+
+        function goToStep1() {
+            document.getElementById('step2Content').classList.add('hidden');
+            document.getElementById('step1Content').classList.remove('hidden');
+            document.getElementById('tab2').classList.remove('step-active');
+            document.getElementById('tab1').classList.add('step-active');
+        }
+
+        document.getElementById('notaryForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Envoi sécurisé...';
+            btn.disabled = true;
+
+            // Ici vous ajouterez votre fetch() vers Power Automate
+            setTimeout(() => {
+                document.getElementById('successModal').classList.remove('hidden');
+            }, 2000);
+        };
+    </script>
+</body>
+</html>

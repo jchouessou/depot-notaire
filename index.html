@@ -293,7 +293,7 @@
         document.getElementById('notaryForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            const flowUrl = "COUPER_ET_COLLER_URL_ICI"; // Remplacez par votre URL de flux HTTP POST
+            const flowUrl = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc"; // Remplacez par votre URL de flux HTTP POST
 
             btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Envoi en cours...';
             btn.disabled = true;
@@ -313,7 +313,7 @@
                 dossierType: document.getElementById('dossierType').value
             };
 
-            if (flowUrl === "COUPER_ET_COLLER_URL_ICI") {
+            if (flowUrl === "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc") {
                 // Simulation pour le test si l'URL n'est pas encore mise
                 setTimeout(() => {
                     document.getElementById('successModal').classList.remove('hidden');

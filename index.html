@@ -214,72 +214,12 @@
     </div>
 
     <script>
-        const docConfig = {
-            'recherche': ['Certificat de décès officiel', 'Recherche Chambre des Notaires', 'Recherche Barreau du Québec'],
-            'testament': ['Pièce d\'identité avec photo', 'Deuxième pièce d\'identité', 'Bilan patrimonial sommaire', 'Coordonnées des exécuteurs'],
-            'achat': ['Offre d\'achat acceptée', 'Certificat de localisation', 'Contrat de mariage (si applicable)', 'Preuve d\'assurance habitation'],
-            'refinancement': ['Dernier relevé hypothécaire', 'Compte de taxes municipales', 'Certificat de localisation à jour']
-        };
-
+        // NAVIGATION
         function goToStep2() {
-            const required = ['lastName', 'dob', 'address', 'city', 'province', 'postalCode', 'phone', 'email'];
-            let valid = true;
-            required.forEach(id => {
-                const el = document.getElementById(id);
-                if(!el.value) {
-                    el.classList.add('border-red-300');
-                    valid = false;
-                } else {
-                    el.classList.remove('border-red-300');
-                }
-            });
-
-            if(!valid) {
-                alert("Veuillez remplir tous les champs obligatoires (*)");
-                return;
-            }
-
             document.getElementById('step1Content').classList.add('hidden');
             document.getElementById('step2Content').classList.remove('hidden');
             document.getElementById('tab1').classList.replace('step-active', 'text-gray-400');
             document.getElementById('tab2').classList.replace('text-gray-400', 'step-active');
-            window.scrollTo(0,0);
-        }
-
-        function generateUploadFields() {
-            const type = document.getElementById('dossierType').value;
-            const area = document.getElementById('uploadArea');
-            if(!type) return;
-
-            document.getElementById('uploadContainer').classList.remove('hidden');
-            area.innerHTML = "";
-
-            docConfig[type].forEach(docName => {
-                const uniqueId = btoa(docName).substring(0, 8);
-                const div = document.createElement('div');
-                div.className = "flex items-center justify-between p-5 border border-gray-100 rounded-2xl bg-gray-50 hover:bg-white hover:border-[#1346d4] transition-all group";
-                div.innerHTML = `
-                    <div class="flex-grow">
-                        <p class="font-bold text-gray-700 text-sm">${docName}</p>
-                        <p id="label_${uniqueId}" class="text-xs text-gray-400 mt-1 italic">Aucun fichier sélectionné</p>
-                    </div>
-                    <input type="file" class="hidden" id="input_${uniqueId}" onchange="handleFile(this, '${uniqueId}')">
-                    <button type="button" onclick="document.getElementById('input_${uniqueId}').click()" 
-                            class="ml-4 px-4 py-2 border-2 border-gray-200 text-gray-400 rounded-xl text-xs font-black uppercase tracking-tighter group-hover:border-[#1346d4] group-hover:text-[#1346d4] transition-all">
-                        Choisir
-                    </button>
-                `;
-                area.appendChild(div);
-            });
-        }
-
-        function handleFile(input, id) {
-            const label = document.getElementById('label_' + id);
-            if(input.files.length > 0) {
-                label.innerText = "✓ " + input.files[0].name;
-                label.classList.replace('text-gray-400', 'text-green-500');
-                label.classList.add('font-bold');
-            }
         }
 
         function goToStep1() {
@@ -289,13 +229,14 @@
             document.getElementById('tab1').classList.replace('text-gray-400', 'step-active');
         }
 
-        // --- ENVOI AU FLUX POWER AUTOMATE ---
+        // ENVOI RÉEL
         document.getElementById('notaryForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            const flowUrl = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc"; // Remplacez par votre URL de flux HTTP POST
+            // VOTRE URL DE FLUX (Assurez-vous qu'elle est correcte)
+            const flowUrl = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc";
 
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Envoi en cours...';
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Envoi...';
             btn.disabled = true;
 
             const data = {
@@ -309,35 +250,28 @@
                 postalCode: document.getElementById('postalCode').value,
                 phone: document.getElementById('phone').value,
                 email: document.getElementById('email').value,
-                fileNumber: document.getElementById('fileNumber').value, // Nouveau champ ajouté
+                fileNumber: document.getElementById('fileNumber').value,
                 dossierType: document.getElementById('dossierType').value
             };
 
-            if (flowUrl === "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc") {
-                // Simulation pour le test si l'URL n'est pas encore mise
-                setTimeout(() => {
-                    document.getElementById('successModal').classList.remove('hidden');
-                }, 1500);
-            } else {
-                try {
-                    const response = await fetch(flowUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
+            try {
+                const response = await fetch(flowUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
 
-                    if (response.ok) {
-                        document.getElementById('successModal').classList.remove('hidden');
-                    } else {
-                        alert("Erreur lors de l'envoi. Veuillez vérifier votre connexion.");
-                        btn.disabled = false;
-                        btn.innerText = "Terminer et envoyer";
-                    }
-                } catch (error) {
-                    alert("Impossible de joindre le serveur.");
+                if (response.ok) {
+                    document.getElementById('successModal').classList.remove('hidden');
+                } else {
+                    alert("Le serveur a refusé l'envoi. Vérifiez le flux Power Automate.");
                     btn.disabled = false;
-                    btn.innerText = "Terminer et envoyer";
+                    btn.innerText = "Réessayer";
                 }
+            } catch (error) {
+                alert("Erreur réseau : Impossible de contacter Power Automate.");
+                btn.disabled = false;
+                btn.innerText = "Réessayer";
             }
         };
     </script>

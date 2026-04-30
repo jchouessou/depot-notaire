@@ -9,7 +9,6 @@
     <style>
         :root {
             --notaire-blue: #1346d4;
-            --notaire-dark: #1a1a1a;
             --bg-gray: #f8fafc;
         }
 
@@ -53,15 +52,35 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        input::placeholder {
-            color: #cbd5e1;
-            font-size: 0.9rem;
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .file-upload-card {
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .file-upload-card:hover {
+            border-color: var(--notaire-blue);
+            background-color: #f0f4ff;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Header / Logo -->
+    <div id="loading" class="loading-overlay">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-900"></div>
+        <p class="mt-4 text-blue-900 font-semibold text-center">Traitement et envoi en cours...<br><span class="text-xs font-normal text-gray-500">Veuillez patienter quelques instants.</span></p>
+    </div>
+
     <header class="bg-white border-b py-6">
         <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-800">ELSIE MONTCHO <span style="color: var(--notaire-blue);">NOTAIRE INC.</span></h1>
@@ -72,7 +91,6 @@
     <main class="flex-grow py-8 px-4">
         <div class="max-w-4xl mx-auto">
             
-            <!-- Navigation des Étapes -->
             <div class="flex justify-center mb-8 border-b border-gray-200">
                 <button id="tab1" class="px-6 py-4 font-semibold step-active transition-all text-sm md:text-base">
                     1. Informations personnelles
@@ -82,12 +100,10 @@
                 </button>
             </div>
 
-            <!-- Carte du Formulaire -->
             <div class="bg-white rounded-2xl p-6 md:p-10 card-shadow fade-in">
-                
                 <form id="notaryForm">
                     
-                    <!-- ÉTAPE 1 : INFOS PERSONNELLES -->
+                    <!-- ÉTAPE 1 -->
                     <div id="step1Content">
                         <h2 class="text-xl font-bold mb-8 text-gray-800 flex items-center">
                             <i class="fas fa-user-circle mr-3 text-[#1346d4]"></i> Profil du client
@@ -148,23 +164,22 @@
                         </div>
 
                         <div class="mt-10 flex justify-end">
-                            <button type="button" onclick="goToStep2()" class="btn-notaire text-white px-12 py-4 rounded-full font-bold shadow-lg flex items-center">
-                                Continuer vers les documents <i class="fas fa-chevron-right ml-3 text-sm"></i>
+                            <button type="button" onclick="goToStep2()" class="btn-notaire text-white px-12 py-4 rounded-full font-bold shadow-lg">
+                                Continuer <i class="fas fa-chevron-right ml-2"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 2 : DOCUMENTS -->
+                    <!-- ÉTAPE 2 -->
                     <div id="step2Content" class="hidden">
                         <h2 class="text-xl font-bold mb-4 text-gray-800">Détails du dossier</h2>
                         
-                        <!-- Nouveau champ : Numéro de dossier -->
                         <div class="mb-6">
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier</label>
-                            <input type="text" id="fileNumber" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Mettre le numero de dossier reçu dans le mail /Ex: xxEMxxxx - Nom">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier *</label>
+                            <input type="text" id="fileNumber" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0010 - NOM">
                         </div>
 
-                        <div class="mb-10">
+                        <div class="mb-8">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-2 text-[#1346d4]">Type de dossier concerné *</label>
                             <select id="dossierType" onchange="generateUploadFields()" required class="form-input w-full p-4 border-2 border-gray-100 rounded-xl bg-gray-50 font-semibold text-gray-700">
                                 <option value="" disabled selected>Veuillez choisir un type de dossier...</option>
@@ -176,46 +191,73 @@
                         </div>
 
                         <div id="uploadContainer" class="hidden">
-                            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Documents à téléverser</h3>
+                            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Documents requis</h3>
                             <div id="uploadArea" class="space-y-4">
-                                <!-- Injecté par JS -->
+                                <!-- Injecté par JavaScript -->
                             </div>
                         </div>
 
                         <div class="mt-12 flex flex-col md:flex-row justify-between items-center gap-6">
-                            <button type="button" onclick="goToStep1()" class="text-gray-400 font-bold hover:text-gray-600 transition-colors uppercase text-xs tracking-widest">
-                                <i class="fas fa-arrow-left mr-2"></i> Retour aux infos
+                            <button type="button" onclick="goToStep1()" class="text-gray-400 font-bold uppercase text-xs tracking-widest">
+                                <i class="fas fa-arrow-left mr-2"></i> Retour
                             </button>
                             <button type="submit" id="submitBtn" class="btn-notaire text-white w-full md:w-auto px-12 py-4 rounded-full font-bold shadow-xl">
-                                Terminer et envoyer le dossier
+                                Envoyer le dossier complet
                             </button>
                         </div>
                     </div>
-
                 </form>
             </div>
-
-            <p class="text-center text-gray-400 text-xs mt-10">
-                <i class="fas fa-lock mr-1"></i> Vos données sont protégées par un chiffrement de bout en bout.
-            </p>
         </div>
     </main>
 
-    <!-- Modal de succès -->
     <div id="successModal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-10 max-w-sm w-full text-center shadow-2xl">
-            <div class="w-20 h-20 bg-cyan-50 text-[#1346d4] rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
-                <i class="fas fa-paper-plane"></i>
+            <div class="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+                <i class="fas fa-check"></i>
             </div>
             <h3 class="text-2xl font-black mb-3 text-gray-800">C'est envoyé !</h3>
-            <p class="text-gray-500 leading-relaxed mb-8">Nous avons bien reçu vos informations. L'équipe d'<strong>ELSIE MONTCHO NOTAIRE INC.</strong> communiquera avec vous sous peu.</p>
-            <button onclick="location.reload()" class="btn-notaire text-white w-full py-4 rounded-2xl font-bold text-lg shadow-lg">Compris</button>
+            <p class="text-gray-500 leading-relaxed mb-8">Vos documents ont été transmis. Nous reviendrons vers vous rapidement.</p>
+            <button onclick="location.reload()" class="btn-notaire text-white w-full py-4 rounded-2xl font-bold text-lg shadow-lg">Fermer</button>
         </div>
     </div>
 
     <script>
-        // NAVIGATION
+        const config = {
+            recherche: ["Pièce d'identité 1", "Pièce d'identité 2", "Certificat de décès", "Recherche testamentaire Chambre des Notaires", "Recherche testamentaire Barreau"],
+            testament: ["Pièce d'identité 1", "Pièce d'identité 2", "Ancien testament (si applicable)", "Liste des biens"],
+            achat: ["Pièce d'identité 1", "Pièce d'identité 2", "Offre d'achat acceptée", "Preuve de mise de fonds", "Certificat de localisation"],
+            refinancement: ["Pièce d'identité 1", "Compte de taxes municipales", "Compte de taxes scolaires", "Certificat de localisation", "Relevé hypothécaire actuel"]
+        };
+
+        function generateUploadFields() {
+            const type = document.getElementById('dossierType').value;
+            const container = document.getElementById('uploadContainer');
+            const area = document.getElementById('uploadArea');
+            
+            area.innerHTML = '';
+            
+            if (config[type]) {
+                config[type].forEach((docName, index) => {
+                    const div = document.createElement('div');
+                    div.className = "file-upload-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 fade-in";
+                    div.innerHTML = `
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xs mr-3">${index + 1}</div>
+                            <span class="text-sm font-semibold text-gray-700">${docName}</span>
+                        </div>
+                        <input type="file" class="doc-input text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" data-label="${docName}">
+                    `;
+                    area.appendChild(div);
+                });
+                container.classList.remove('hidden');
+            }
+        }
+
         function goToStep2() {
+            if(!document.getElementById('lastName').value || !document.getElementById('dob').value) {
+                alert("Veuillez remplir les informations obligatoires."); return;
+            }
             document.getElementById('step1Content').classList.add('hidden');
             document.getElementById('step2Content').classList.remove('hidden');
             document.getElementById('tab1').classList.replace('step-active', 'text-gray-400');
@@ -229,32 +271,57 @@
             document.getElementById('tab1').classList.replace('text-gray-400', 'step-active');
         }
 
-        // ENVOI RÉEL
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve({
+                name: file.name,
+                content: reader.result.split(',')[1]
+            });
+            reader.onerror = error => reject(error);
+        });
+
         document.getElementById('notaryForm').onsubmit = async (e) => {
             e.preventDefault();
+            const loading = document.getElementById('loading');
             const btn = document.getElementById('submitBtn');
-            // VOTRE URL DE FLUX (Assurez-vous qu'elle est correcte)
             const flowUrl = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc";
 
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Envoi...';
+            loading.style.display = 'flex';
             btn.disabled = true;
 
-            const data = {
-                lastName: document.getElementById('lastName').value,
-                firstName: document.getElementById('firstName').value,
-                dob: document.getElementById('dob').value,
-                nas: document.getElementById('nas').value,
-                address: document.getElementById('address').value,
-                city: document.getElementById('city').value,
-                province: document.getElementById('province').value,
-                postalCode: document.getElementById('postalCode').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                fileNumber: document.getElementById('fileNumber').value,
-                dossierType: document.getElementById('dossierType').value
-            };
-
             try {
+                const inputs = document.querySelectorAll('.doc-input');
+                const filePromises = [];
+
+                inputs.forEach(input => {
+                    if (input.files.length > 0) {
+                        // On renomme le fichier pour inclure le type de document (ex: Piece_Identite_nom_image.jpg)
+                        const label = input.getAttribute('data-label').replace(/[^a-z0-9]/gi, '_');
+                        const file = input.files[0];
+                        const renamedFile = new File([file], `${label}_${file.name}`, {type: file.type});
+                        filePromises.push(toBase64(renamedFile));
+                    }
+                });
+
+                const filesData = await Promise.all(filePromises);
+
+                const data = {
+                    lastName: document.getElementById('lastName').value,
+                    firstName: document.getElementById('firstName').value,
+                    dob: document.getElementById('dob').value,
+                    nas: document.getElementById('nas').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    province: document.getElementById('province').value,
+                    postalCode: document.getElementById('postalCode').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    fileNumber: document.getElementById('fileNumber').value,
+                    dossierType: document.getElementById('dossierType').value,
+                    attachments: filesData
+                };
+
                 const response = await fetch(flowUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -264,14 +331,13 @@
                 if (response.ok) {
                     document.getElementById('successModal').classList.remove('hidden');
                 } else {
-                    alert("Le serveur a refusé l'envoi. Vérifiez le flux Power Automate.");
-                    btn.disabled = false;
-                    btn.innerText = "Réessayer";
+                    alert("Erreur lors de l'envoi.");
                 }
             } catch (error) {
-                alert("Erreur réseau : Impossible de contacter Power Automate.");
+                alert("Erreur réseau.");
+            } finally {
+                loading.style.display = 'none';
                 btn.disabled = false;
-                btn.innerText = "Réessayer";
             }
         };
     </script>

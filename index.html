@@ -156,8 +156,14 @@
 
                     <!-- ÉTAPE 2 : DOCUMENTS -->
                     <div id="step2Content" class="hidden">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800">Sélection du dossier</h2>
+                        <h2 class="text-xl font-bold mb-4 text-gray-800">Détails du dossier</h2>
                         
+                        <!-- Nouveau champ : Numéro de dossier -->
+                        <div class="mb-6">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier</label>
+                            <input type="text" id="fileNumber" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Mettre le numero de dossier reçu dans le mail /Ex: xxEMxxxx - Nom">
+                        </div>
+
                         <div class="mb-10">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-2 text-[#1346d4]">Type de dossier concerné *</label>
                             <select id="dossierType" onchange="generateUploadFields()" required class="form-input w-full p-4 border-2 border-gray-100 rounded-xl bg-gray-50 font-semibold text-gray-700">
@@ -208,42 +214,23 @@
     </div>
 
     <script>
-        // CONFIGURATION : Vous pouvez modifier les noms des documents ici facilement
         const docConfig = {
-            'recherche': [
-                'Certificat de décès officiel', 
-                'Recherche Chambre des Notaires', 
-                'Recherche Barreau du Québec'
-            ],
-            'testament': [
-                'Pièce d\'identité avec photo', 
-                'Deuxième pièce d\'identité', 
-                'Bilan patrimonial sommaire',
-                'Coordonnées des exécuteurs'
-            ],
-            'achat': [
-                'Offre d\'achat acceptée', 
-                'Certificat de localisation', 
-                'Contrat de mariage (si applicable)',
-                'Preuve d\'assurance habitation'
-            ],
-            'refinancement': [
-                'Dernier relevé hypothécaire', 
-                'Compte de taxes municipales', 
-                'Certificat de localisation à jour'
-            ]
+            'recherche': ['Certificat de décès officiel', 'Recherche Chambre des Notaires', 'Recherche Barreau du Québec'],
+            'testament': ['Pièce d\'identité avec photo', 'Deuxième pièce d\'identité', 'Bilan patrimonial sommaire', 'Coordonnées des exécuteurs'],
+            'achat': ['Offre d\'achat acceptée', 'Certificat de localisation', 'Contrat de mariage (si applicable)', 'Preuve d\'assurance habitation'],
+            'refinancement': ['Dernier relevé hypothécaire', 'Compte de taxes municipales', 'Certificat de localisation à jour']
         };
 
         function goToStep2() {
-            // Validation simple de l'étape 1
             const required = ['lastName', 'dob', 'address', 'city', 'province', 'postalCode', 'phone', 'email'];
             let valid = true;
             required.forEach(id => {
-                if(!document.getElementById(id).value) {
-                    document.getElementById(id).classList.add('border-red-300');
+                const el = document.getElementById(id);
+                if(!el.value) {
+                    el.classList.add('border-red-300');
                     valid = false;
                 } else {
-                    document.getElementById(id).classList.remove('border-red-300');
+                    el.classList.remove('border-red-300');
                 }
             });
 
@@ -254,21 +241,17 @@
 
             document.getElementById('step1Content').classList.add('hidden');
             document.getElementById('step2Content').classList.remove('hidden');
-            document.getElementById('tab1').classList.remove('step-active');
-            document.getElementById('tab1').classList.add('text-gray-400');
-            document.getElementById('tab2').classList.add('step-active');
-            document.getElementById('tab2').classList.remove('text-gray-400');
+            document.getElementById('tab1').classList.replace('step-active', 'text-gray-400');
+            document.getElementById('tab2').classList.replace('text-gray-400', 'step-active');
             window.scrollTo(0,0);
         }
 
         function generateUploadFields() {
             const type = document.getElementById('dossierType').value;
-            const container = document.getElementById('uploadContainer');
             const area = document.getElementById('uploadArea');
-            
             if(!type) return;
 
-            container.classList.remove('hidden');
+            document.getElementById('uploadContainer').classList.remove('hidden');
             area.innerHTML = "";
 
             docConfig[type].forEach(docName => {
@@ -294,28 +277,68 @@
             const label = document.getElementById('label_' + id);
             if(input.files.length > 0) {
                 label.innerText = "✓ " + input.files[0].name;
-                label.classList.remove('text-gray-400');
-                label.classList.add('text-green-500', 'font-bold');
+                label.classList.replace('text-gray-400', 'text-green-500');
+                label.classList.add('font-bold');
             }
         }
 
         function goToStep1() {
             document.getElementById('step2Content').classList.add('hidden');
             document.getElementById('step1Content').classList.remove('hidden');
-            document.getElementById('tab2').classList.remove('step-active');
-            document.getElementById('tab1').classList.add('step-active');
+            document.getElementById('tab2').classList.replace('step-active', 'text-gray-400');
+            document.getElementById('tab1').classList.replace('text-gray-400', 'step-active');
         }
 
+        // --- ENVOI AU FLUX POWER AUTOMATE ---
         document.getElementById('notaryForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Envoi sécurisé...';
+            const flowUrl = "COUPER_ET_COLLER_URL_ICI"; // Remplacez par votre URL de flux HTTP POST
+
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Envoi en cours...';
             btn.disabled = true;
 
-            // Ici vous ajouterez votre fetch() vers Power Automate
-            setTimeout(() => {
-                document.getElementById('successModal').classList.remove('hidden');
-            }, 2000);
+            const data = {
+                lastName: document.getElementById('lastName').value,
+                firstName: document.getElementById('firstName').value,
+                dob: document.getElementById('dob').value,
+                nas: document.getElementById('nas').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                province: document.getElementById('province').value,
+                postalCode: document.getElementById('postalCode').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                fileNumber: document.getElementById('fileNumber').value, // Nouveau champ ajouté
+                dossierType: document.getElementById('dossierType').value
+            };
+
+            if (flowUrl === "COUPER_ET_COLLER_URL_ICI") {
+                // Simulation pour le test si l'URL n'est pas encore mise
+                setTimeout(() => {
+                    document.getElementById('successModal').classList.remove('hidden');
+                }, 1500);
+            } else {
+                try {
+                    const response = await fetch(flowUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        document.getElementById('successModal').classList.remove('hidden');
+                    } else {
+                        alert("Erreur lors de l'envoi. Veuillez vérifier votre connexion.");
+                        btn.disabled = false;
+                        btn.innerText = "Terminer et envoyer";
+                    }
+                } catch (error) {
+                    alert("Impossible de joindre le serveur.");
+                    btn.disabled = false;
+                    btn.innerText = "Terminer et envoyer";
+                }
+            }
         };
     </script>
 </body>

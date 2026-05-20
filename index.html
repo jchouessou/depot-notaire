@@ -76,141 +76,206 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
+    <!-- OVERLAY DE CHARGEMENT -->
     <div id="loading" class="loading-overlay">
         <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-900"></div>
-        <p class="mt-4 text-blue-900 font-semibold text-center">Traitement et envoi en cours...<br><span class="text-xs font-normal text-gray-500">Veuillez patienter quelques instants.</span></p>
+        <p class="mt-4 text-blue-900 font-semibold text-center" id="loadingText">Traitement et envoi en cours...<br><span class="text-xs font-normal text-gray-500">Veuillez patienter quelques instants.</span></p>
     </div>
 
-    <header class="bg-white border-b py-6">
-        <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-gray-800">ELSIE MONTCHO <span style="color: var(--notaire-blue);">NOTAIRE INC.</span></h1>
-            <div class="text-sm text-gray-500 uppercase tracking-widest hidden md:block">Portail de transmission</div>
-        </div>
-    </header>
+    <!-- TOAST NOTIFICATION DE RECHANGE POUR LES ALERTS SANS INFOS BLOQUANTES -->
+    <div id="toastNotification" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300 ease-in-out bg-red-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-3 hidden max-w-sm">
+        <span class="text-xl"><i class="fas fa-exclamation-circle"></i></span>
+        <p id="toastText" class="text-sm font-semibold"></p>
+    </div>
 
-    <main class="flex-grow py-8 px-4">
-        <div class="max-w-4xl mx-auto">
+    <!-- PASSERELLE DE CONNEXION SECURISÉE (S'affiche en premier) -->
+    <div id="loginGate" class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 fade-in">
+        <div class="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-3xl card-shadow">
+            <div class="text-center">
+                <h1 class="text-3xl font-black text-gray-800 tracking-tight">ELSIE MONTCHO</h1>
+                <h2 class="text-lg font-bold tracking-widest uppercase mt-1" style="color: var(--notaire-blue);">NOTAIRE INC.</h2>
+                <div class="h-1 w-20 bg-blue-600 mx-auto mt-4 rounded-full"></div>
+                <p class="mt-6 text-sm text-gray-500 font-medium">Portail de transmission sécurisé — Veuillez vous identifier pour accéder à votre espace de dépôt de pièces.</p>
+            </div>
             
-            <div class="flex justify-center mb-8 border-b border-gray-200">
-                <button id="tab1" class="px-6 py-4 font-semibold step-active transition-all text-sm md:text-base">
-                    1. Informations personnelles
-                </button>
-                <button id="tab2" class="px-6 py-4 font-semibold text-gray-400 cursor-not-allowed text-sm md:text-base" disabled>
-                    2. Documents à transmettre
-                </button>
-            </div>
-
-            <div class="bg-white rounded-2xl p-6 md:p-10 card-shadow fade-in">
-                <form id="notaryForm">
-                    
-                    <!-- ÉTAPE 1 -->
-                    <div id="step1Content">
-                        <h2 class="text-xl font-bold mb-8 text-gray-800 flex items-center">
-                            <i class="fas fa-user-circle mr-3 text-[#1346d4]"></i> Profil du client
-                        </h2>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-                            <!-- Nom et Prénom -->
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nom *</label>
-                                <input type="text" id="lastName" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Votre nom de famille">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Prénom(s)</label>
-                                <input type="text" id="firstName" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Vos prénoms">
-                            </div>
-
-                            <!-- Date de Naissance et NAS -->
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date de naissance *</label>
-                                <input type="date" id="dob" required class="form-input w-full p-3 border border-gray-200 rounded-lg">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro d'assurance sociale (NAS)</label>
-                                <input type="text" id="nas" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="000 000 000">
-                            </div>
-
-                            <!-- Adresse et Ville -->
-                            <div class="md:col-span-2">
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Adresse *</label>
-                                <input type="text" id="address" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Numéro civique et rue">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ville *</label>
-                                <input type="text" id="city" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: Montréal">
-                            </div>
-
-                            <!-- Province et Code Postal -->
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Province *</label>
-                                    <input type="text" id="province" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: Québec">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Code postal *</label>
-                                    <input type="text" id="postalCode" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="A1B 2C3">
-                                </div>
-                            </div>
-
-                            <!-- Téléphone et Courriel -->
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de téléphone *</label>
-                                <input type="tel" id="phone" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="514 000-0000">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Courriel *</label>
-                                <input type="email" id="email" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="exemple@courriel.com">
-                            </div>
+            <form id="loginForm" class="mt-8 space-y-6">
+                <!-- Message d'erreur localisé de connexion -->
+                <div id="loginError" class="hidden bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-shield-alt text-red-500"></i>
                         </div>
+                        <div class="ml-3">
+                            <p id="loginErrorText" class="text-xs font-semibold text-red-800"></p>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="mt-10 flex justify-end">
-                            <button type="button" onclick="goToStep2()" class="btn-notaire text-white px-12 py-4 rounded-full font-bold shadow-lg">
-                                Continuer <i class="fas fa-chevron-right ml-2"></i>
-                            </button>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                <i class="fas fa-folder-open"></i>
+                            </span>
+                            <input type="text" id="loginFileNumber" required class="form-input w-full pl-10 p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0012 - DOSSOU">
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 2 -->
-                    <div id="step2Content" class="hidden">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800">Détails du dossier</h2>
-                        
-                        <div class="mb-6">
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier *</label>
-                            <input type="text" id="fileNumber" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0010 - NOM">
-                        </div>
-
-                        <div class="mb-8">
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-2 text-[#1346d4]">Type de dossier concerné *</label>
-                            <select id="dossierType" onchange="generateUploadFields()" required class="form-input w-full p-4 border-2 border-gray-100 rounded-xl bg-gray-50 font-semibold text-gray-700">
-                                <option value="" disabled selected>Veuillez choisir un type de dossier...</option>
-                                <option value="recherche">Recherche testamentaire</option>
-                                <option value="testament">Testament / Mandat</option>
-                                <option value="achat">Achat / Vente</option>
-                                <option value="refinancement">Refinancement d'hypothèque</option>
-                            </select>
-                        </div>
-
-                        <div id="uploadContainer" class="hidden">
-                            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Documents requis</h3>
-                            <div id="uploadArea" class="space-y-4">
-                                <!-- Injecté par JavaScript -->
-                            </div>
-                        </div>
-
-                        <div class="mt-12 flex flex-col md:flex-row justify-between items-center gap-6">
-                            <button type="button" onclick="goToStep1()" class="text-gray-400 font-bold uppercase text-xs tracking-widest">
-                                <i class="fas fa-arrow-left mr-2"></i> Retour
-                            </button>
-                            <button type="submit" id="submitBtn" class="btn-notaire text-white w-full md:w-auto px-12 py-4 rounded-full font-bold shadow-xl">
-                                Envoyer le dossier complet
-                            </button>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Adresse Courriel *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input type="email" id="loginEmail" required class="form-input w-full pl-10 p-3 border border-gray-200 rounded-lg" placeholder="votre@adresse.com">
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <div>
+                    <button type="submit" id="loginBtn" class="btn-notaire w-full text-white py-4 rounded-full font-bold shadow-xl flex justify-center items-center space-x-2">
+                        <span>S'identifier <i class="fas fa-lock ml-1"></i></span>
+                    </button>
+                </div>
+            </form>
         </div>
-    </main>
+    </div>
 
+    <!-- CONTENU PRINCIPAL (Masqué avant connexion) -->
+    <div id="appContent" class="hidden flex-grow flex flex-col">
+        <header class="bg-white border-b py-6">
+            <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-800">ELSIE MONTCHO <span style="color: var(--notaire-blue);">NOTAIRE INC.</span></h1>
+                <div class="text-sm text-gray-500 uppercase tracking-widest hidden md:block">Portail de transmission</div>
+            </div>
+        </header>
+
+        <main class="flex-grow py-8 px-4">
+            <div class="max-w-4xl mx-auto">
+                
+                <div class="flex justify-center mb-8 border-b border-gray-200">
+                    <button id="tab1" class="px-6 py-4 font-semibold step-active transition-all text-sm md:text-base">
+                        1. Informations personnelles
+                    </button>
+                    <button id="tab2" class="px-6 py-4 font-semibold text-gray-400 cursor-not-allowed text-sm md:text-base" disabled>
+                        2. Documents à transmettre
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 md:p-10 card-shadow fade-in">
+                    <form id="notaryForm">
+                        
+                        <!-- ÉTAPE 1 -->
+                        <div id="step1Content">
+                            <h2 class="text-xl font-bold mb-8 text-gray-800 flex items-center">
+                                <i class="fas fa-user-circle mr-3 text-[#1346d4]"></i> Profil du client
+                            </h2>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+                                <!-- Nom et Prénom -->
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nom *</label>
+                                    <input type="text" id="lastName" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Votre nom de famille">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Prénom(s)</label>
+                                    <input type="text" id="firstName" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Vos prénoms">
+                                </div>
+
+                                <!-- Date de Naissance et NAS -->
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date de naissance *</label>
+                                    <input type="date" id="dob" required class="form-input w-full p-3 border border-gray-200 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro d'assurance sociale (NAS)</label>
+                                    <input type="text" id="nas" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="000 000 000">
+                                </div>
+
+                                <!-- Adresse et Ville -->
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Adresse *</label>
+                                    <input type="text" id="address" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Numéro civique et rue">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ville *</label>
+                                    <input type="text" id="city" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: Montréal">
+                                </div>
+
+                                <!-- Province et Code Postal -->
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Province *</label>
+                                        <input type="text" id="province" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: Québec">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Code postal *</label>
+                                        <input type="text" id="postalCode" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="A1B 2C3">
+                                    </div>
+                                </div>
+
+                                <!-- Téléphone et Courriel -->
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de téléphone *</label>
+                                    <input type="tel" id="phone" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="514 000-0000">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Courriel *</label>
+                                    <input type="email" id="email" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="exemple@courriel.com">
+                                </div>
+                            </div>
+
+                            <div class="mt-10 flex justify-end">
+                                <button type="button" onclick="goToStep2()" class="btn-notaire text-white px-12 py-4 rounded-full font-bold shadow-lg">
+                                    Continuer <i class="fas fa-chevron-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ÉTAPE 2 -->
+                        <div id="step2Content" class="hidden">
+                            <h2 class="text-xl font-bold mb-4 text-gray-800">Détails du dossier</h2>
+                            
+                            <div class="mb-6">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier *</label>
+                                <input type="text" id="fileNumber" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0010 - NOM" readonly>
+                            </div>
+
+                            <div class="mb-8">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2 text-[#1346d4]">Type de dossier concerné *</label>
+                                <select id="dossierType" onchange="generateUploadFields()" required class="form-input w-full p-4 border-2 border-gray-100 rounded-xl bg-gray-50 font-semibold text-gray-700">
+                                    <option value="" disabled selected>Veuillez choisir un type de dossier...</option>
+                                    <option value="recherche">Recherche testamentaire</option>
+                                    <option value="testament">Testament / Mandat</option>
+                                    <option value="achat">Achat / Vente</option>
+                                    <option value="refinancement">Refinancement d'hypothèque</option>
+                                </select>
+                            </div>
+
+                            <div id="uploadContainer" class="hidden">
+                                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Documents requis</h3>
+                                <div id="uploadArea" class="space-y-4">
+                                    <!-- Injecté par JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="mt-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                                <button type="button" onclick="goToStep1()" class="text-gray-400 font-bold uppercase text-xs tracking-widest">
+                                    <i class="fas fa-arrow-left mr-2"></i> Retour
+                                </button>
+                                <button type="submit" id="submitBtn" class="btn-notaire text-white w-full md:w-auto px-12 py-4 rounded-full font-bold shadow-xl">
+                                    Envoyer le dossier complet
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE SUCCÈS -->
     <div id="successModal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-10 max-w-sm w-full text-center shadow-2xl">
             <div class="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
@@ -223,11 +288,94 @@
     </div>
 
     <script>
+        // CONFIGURATION DES FLUXS (REMPLIR L'URL DU FLUX DU JOUR 2)
+        const LOGIN_FLOW_URL = "https://defaultf6d76df9c0274617a6c3e78ea3e501.e1.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/16703c30ec7f4cfe8f98ef7490ceec90/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZhLk12ChypZ_vPkQDEjpH7nJWOmHpZE1vkzHP7ds49k"; 
+        
+        // URL du flux Jour 1 d'origine (Conserver à l'identique pour l'étape 2)
+        const SUBMIT_FLOW_URL = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc";
+
         const config = {
             recherche: ["Pièce d'identité 1", "Pièce d'identité 2", "Certificat de décès", "Recherche testamentaire Chambre des Notaires", "Recherche testamentaire Barreau"],
             testament: ["Pièce d'identité 1", "Pièce d'identité 2", "Ancien testament (si applicable)", "Liste des biens"],
             achat: ["Pièce d'identité 1", "Pièce d'identité 2", "Photo", "Preuve de votre statut au Canada", "Etat matrimonial", "Police d'assurance habitation avant la vente"],
             refinancement: ["Pièce d'identité 1(recto)", "Pièce d'identité 2(verso)", "Photo", "Police d'assurance habitation(CAISSE DESJARDINS DE HULL-AYLMER)", "Preuve de votre statut au Canada", "Ancien relevé d’hypothèque(CAISSE DESJARDINS DE HULL-AYLMER)", "Etat matrimonial", "Confirmation de paiement à jour des comptes de taxes scolaires et taxes municipales"]
+        };
+
+        // GESTIONNAIRE DE NOTIFICATIONS (Alternative aux alerts par défaut)
+        function showNotification(message) {
+            const toast = document.getElementById('toastNotification');
+            const text = document.getElementById('toastText');
+            text.innerText = message;
+            
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 300);
+            }, 4500);
+        }
+
+        // ÉTAPE INTERMEDIAIRE JOUR 2 : CONNEXION ET APPEL DU FLUX
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const loginError = document.getElementById('loginError');
+            const loginErrorText = document.getElementById('loginErrorText');
+            const loading = document.getElementById('loading');
+            const loadingText = document.getElementById('loadingText');
+            
+            const dossier = document.getElementById('loginFileNumber').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
+
+            loginError.classList.add('hidden');
+            loadingText.innerHTML = "Vérification de vos identifiants de sécurité...<br><span class='text-xs font-normal text-gray-500'>Veuillez patienter.</span>";
+            loading.style.display = 'flex';
+
+            try {
+                const response = await fetch(LOGIN_FLOW_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        dossierSaisi: dossier,
+                        emailSaisi: email
+                    })
+                });
+
+                const data = response.headers.get('content-type')?.includes('application/json') 
+                    ? await response.json() 
+                    : null;
+
+                if (response.status === 200) {
+                    // Succès de l'identification : On masque la passerelle et on injecte les données pré-validées
+                    document.getElementById('loginGate').classList.add('hidden');
+                    document.getElementById('appContent').classList.remove('hidden');
+                    
+                    // Remplissage automatique et verrouillage des clés
+                    document.getElementById('email').value = email;
+                    document.getElementById('fileNumber').value = dossier;
+                } else if (response.status === 403) {
+                    // Compte bloqué
+                    loginErrorText.innerText = data?.message || "Accès bloqué. Ce dossier a été verrouillé après 3 échecs.";
+                    loginError.classList.remove('hidden');
+                } else if (response.status === 401 || response.status === 404) {
+                    // Erreurs d'identification
+                    loginErrorText.innerText = data?.message || "Numéro de dossier ou adresse courriel invalide.";
+                    loginError.classList.remove('hidden');
+                } else {
+                    // Autres erreurs génériques
+                    loginErrorText.innerText = "Une erreur système s'est produite. Veuillez réessayer ultérieurement.";
+                    loginError.classList.remove('hidden');
+                }
+            } catch (error) {
+                loginErrorText.innerText = "Erreur réseau. Impossible de contacter le serveur d'authentification.";
+                loginError.classList.remove('hidden');
+            } finally {
+                loading.style.display = 'none';
+            }
         };
 
         function generateUploadFields() {
@@ -256,7 +404,8 @@
 
         function goToStep2() {
             if(!document.getElementById('lastName').value || !document.getElementById('dob').value) {
-                alert("Veuillez remplir les informations obligatoires."); return;
+                showNotification("Veuillez remplir les informations obligatoires de l'étape 1."); 
+                return;
             }
             document.getElementById('step1Content').classList.add('hidden');
             document.getElementById('step2Content').classList.remove('hidden');
@@ -281,12 +430,14 @@
             reader.onerror = error => reject(error);
         });
 
+        // ENVOI DU DOSSIER FINAL (Jour 1 d'origine)
         document.getElementById('notaryForm').onsubmit = async (e) => {
             e.preventDefault();
             const loading = document.getElementById('loading');
+            const loadingText = document.getElementById('loadingText');
             const btn = document.getElementById('submitBtn');
-            const flowUrl = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc";
 
+            loadingText.innerHTML = "Traitement et envoi en cours...<br><span class='text-xs font-normal text-gray-500'>Veuillez patienter quelques instants.</span>";
             loading.style.display = 'flex';
             btn.disabled = true;
 
@@ -296,7 +447,6 @@
 
                 inputs.forEach(input => {
                     if (input.files.length > 0) {
-                        // On renomme le fichier pour inclure le type de document (ex: Piece_Identite_nom_image.jpg)
                         const label = input.getAttribute('data-label').replace(/[^a-z0-9]/gi, '_');
                         const file = input.files[0];
                         const renamedFile = new File([file], `${label}_${file.name}`, {type: file.type});
@@ -322,7 +472,7 @@
                     attachments: filesData
                 };
 
-                const response = await fetch(flowUrl, {
+                const response = await fetch(SUBMIT_FLOW_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -331,10 +481,10 @@
                 if (response.ok) {
                     document.getElementById('successModal').classList.remove('hidden');
                 } else {
-                    alert("Erreur lors de l'envoi.");
+                    showNotification("Erreur lors de l'envoi vers l'espace de stockage.");
                 }
             } catch (error) {
-                alert("Erreur réseau.");
+                showNotification("Erreur réseau lors de la transmission finale.");
             } finally {
                 loading.style.display = 'none';
                 btn.disabled = false;

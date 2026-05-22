@@ -147,7 +147,15 @@
         <header class="bg-white border-b py-6">
             <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
                 <h1 class="text-2xl font-bold text-gray-800">ELSIE MONTCHO <span style="color: var(--notaire-blue);">NOTAIRE INC.</span></h1>
-                <div class="text-sm text-gray-500 uppercase tracking-widest hidden md:block">Portail de transmission</div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-500 uppercase tracking-widest hidden md:block">Portail de transmission</div>
+                    
+                    <!-- BOUTON DE DÉCONNEXION -->
+                    <button type="button" onclick="logout()" class="text-red-600 hover:text-red-800 font-bold text-sm flex items-center space-x-1.5 border border-red-200 hover:border-red-400 px-3.5 py-1.5 rounded-lg transition-all bg-red-50 hover:bg-red-100">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="hidden sm:inline">Déconnexion</span>
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -320,6 +328,27 @@
             }, 4500);
         }
 
+        // DECONNEXION DU PORTAIL CLIENT
+        function logout() {
+            // Réinitialisation sécurisée de tous les champs de saisie de l'espace de transmission
+            document.getElementById('notaryForm').reset();
+            document.getElementById('loginForm').reset();
+            
+            // Masquage et nettoyage du sélecteur de fichiers de l'étape 2
+            document.getElementById('uploadContainer').classList.add('hidden');
+            document.getElementById('uploadArea').innerHTML = '';
+            document.getElementById('dossierType').selectedIndex = 0;
+
+            // Retour automatique visuel à l'étape 1 du formulaire
+            goToStep1();
+
+            // Masquer l'espace de dépôt et réafficher l'écran d'identification
+            document.getElementById('appContent').classList.add('hidden');
+            document.getElementById('loginGate').classList.remove('hidden');
+            
+            showNotification("Vous avez été déconnecté avec succès.");
+        }
+        
         // ÉTAPE INTERMEDIAIRE JOUR 2 : CONNEXION ET APPEL DU FLUX
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();

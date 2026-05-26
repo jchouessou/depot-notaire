@@ -111,6 +111,35 @@
                     </div>
                 </div>
 
+                <!-- ENCADRÉ D'ASSISTANCE EN CAS DE BLOCAGE COMPTE -->
+                <div id="blockedAssistance" class="hidden bg-blue-50 border-2 border-blue-200 p-5 rounded-2xl space-y-4 fade-in">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 text-blue-600 mt-0.5 text-lg">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="text-sm font-bold text-blue-900">Besoin d'aide pour vous connecter ?</h4>
+                            <p class="text-xs text-blue-700 mt-1 leading-relaxed">
+                                Afin de protéger le secret professionnel de vos documents, l'accès a été temporairement suspendu pour ce dossier. C'est très simple de le réactiver :
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-2 border-t border-blue-100 flex flex-col sm:flex-row gap-3">
+                        <!-- Demander le déblocage par email -->
+                        <a id="btnMailUnblock" href="#" class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-3 rounded-lg transition-all flex items-center justify-center space-x-2">
+                            <i class="fas fa-envelope"></i>
+                            <span>Demander par courriel</span>
+                        </a>
+                        
+                        <!-- Contacter par téléphone -->
+                        <!-- <a href="tel:5140000000" class="flex-1 text-center bg-white border border-blue-300 hover:bg-blue-100 text-blue-800 text-xs font-bold py-2.5 px-3 rounded-lg transition-all flex items-center justify-center space-x-2">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>Appeler l'étude</span>
+                        </a> -->
+                    </div>
+                </div>
+
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier *</label>
@@ -339,6 +368,9 @@
             document.getElementById('uploadArea').innerHTML = '';
             document.getElementById('dossierType').selectedIndex = 0;
 
+            // Masquer l'aide au blocage au cas où
+            document.getElementById('blockedAssistance').classList.add('hidden');
+
             // Retour automatique visuel à l'étape 1 du formulaire
             goToStep1();
 
@@ -348,12 +380,14 @@
             
             showNotification("Vous avez été déconnecté avec succès.");
         }
-        
+
         // ÉTAPE INTERMEDIAIRE JOUR 2 : CONNEXION ET APPEL DU FLUX
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const loginError = document.getElementById('loginError');
             const loginErrorText = document.getElementById('loginErrorText');
+            const blockedAssistance = document.getElementById('blockedAssistance');
+            const btnMailUnblock = document.getElementById('btnMailUnblock');
             const loading = document.getElementById('loading');
             const loadingText = document.getElementById('loadingText');
             
@@ -361,6 +395,8 @@
             const email = document.getElementById('loginEmail').value.trim();
 
             loginError.classList.add('hidden');
+            blockedAssistance.classList.add('hidden');
+            
             loadingText.innerHTML = "Vérification de vos identifiants de sécurité...<br><span class='text-xs font-normal text-gray-500'>Veuillez patienter.</span>";
             loading.style.display = 'flex';
 
@@ -387,11 +423,20 @@
                     document.getElementById('email').value = email;
                     document.getElementById('fileNumber').value = dossier;
                 } else if (response.status === 403) {
-                    // Compte bloqué
+                    // COMPTE BLOQUÉ : Affichage de l'erreur + de l'encadré d'assistance intelligente
                     loginErrorText.innerText = data?.message || "Accès bloqué. Ce dossier a été verrouillé après 3 échecs.";
                     loginError.classList.remove('hidden');
+                    
+                    // Génération dynamique du lien de messagerie pré-rempli (mailto) pour faciliter la demande du client
+                    const destinataireEtude = "manakel259451@gmail.com"; // Courriel de l'étude
+                    const sujetCourriel = encodeURIComponent(`Demande de déblocage - Dossier ${dossier}`);
+                    const corpsCourriel = encodeURIComponent(`Bonjour,\n\nMon espace de dépôt de pièces pour le dossier "${dossier}" est actuellement verrouillé après plusieurs tentatives de saisie.\n\nJe vous prie de bien vouloir réinitialiser mon accès.\n\nCordialement.`);
+                    
+                    btnMailUnblock.setAttribute('href', `mailto:${destinataireEtude}?subject=${sujetCourriel}&body=${corpsCourriel}`);
+                    
+                    blockedAssistance.classList.remove('hidden');
                 } else if (response.status === 401 || response.status === 404) {
-                    // Erreurs d'identification
+                    // Erreurs d'identification simples (compteur d'échecs incrémenté côté serveur)
                     loginErrorText.innerText = data?.message || "Numéro de dossier ou adresse courriel invalide.";
                     loginError.classList.remove('hidden');
                 } else {

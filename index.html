@@ -82,14 +82,14 @@
         <p class="mt-4 text-blue-900 font-semibold text-center" id="loadingText">Traitement et envoi en cours...<br><span class="text-xs font-normal text-gray-500">Veuillez patienter quelques instants.</span></p>
     </div>
 
-    <!-- TOAST NOTIFICATION DE RECHANGE POUR LES ALERTS SANS INFOS BLOQUANTES -->
+    <!-- TOAST NOTIFICATION -->
     <div id="toastNotification" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300 ease-in-out bg-red-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-3 hidden max-w-sm">
         <span class="text-xl"><i class="fas fa-exclamation-circle"></i></span>
         <p id="toastText" class="text-sm font-semibold"></p>
     </div>
 
-    <!-- PASSERELLE DE CONNEXION SECURISÉE (S'affiche en premier) -->
-    <div id="loginGate" class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 fade-in">
+    <!-- PASSERELLE DE CONNEXION SECURISÉE -->
+    <div id="loginGate" class="flex-grow flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 fade-in">
         <div class="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-3xl card-shadow">
             <div class="text-center">
                 <h1 class="text-3xl font-black text-gray-800 tracking-tight">ELSIE MONTCHO</h1>
@@ -99,44 +99,34 @@
             </div>
             
             <form id="loginForm" class="mt-8 space-y-6">
-                <!-- Message d'erreur localisé de connexion -->
                 <div id="loginError" class="hidden bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-shield-alt text-red-500"></i>
+                    <div class="flex flex-col">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-shield-alt text-red-500"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p id="loginErrorText" class="text-xs font-semibold text-red-800"></p>
+                            </div>
                         </div>
-                        <div class="ml-3">
-                            <p id="loginErrorText" class="text-xs font-semibold text-red-800"></p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- ENCADRÉ D'ASSISTANCE EN CAS DE BLOCAGE COMPTE -->
-                <div id="blockedAssistance" class="hidden bg-blue-50 border-2 border-blue-200 p-5 rounded-2xl space-y-4 fade-in">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 text-blue-600 mt-0.5 text-lg">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="ml-3">
-                            <h4 class="text-sm font-bold text-blue-900">Besoin d'aide pour vous connecter ?</h4>
-                            <p class="text-xs text-blue-700 mt-1 leading-relaxed">
-                                Afin de protéger le secret professionnel de vos documents, l'accès a été temporairement suspendu pour ce dossier. C'est très simple de le réactiver :
+                        <!-- ENCADRÉ D'ASSISTANCE -->
+                        <div id="blockedAssistance" class="hidden mt-4 bg-blue-50 border border-blue-200 p-4 rounded-xl fade-in">
+                            <h4 class="text-xs font-bold text-blue-900 uppercase flex items-center mb-1">
+                                <i class="fas fa-headset mr-1.5 text-blue-700"></i> Besoin d'aide pour débloquer votre dossier ?
+                            </h4>
+                            <p class="text-[11px] text-blue-700 leading-relaxed mb-3">
+                                Par sécurité, l'accès est suspendu. Vous pouvez demander un déblocage immédiat à nos collaborateurs de l'étude.
                             </p>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <a id="assistanceMailBtn" href="#" class="inline-flex justify-center items-center px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-md">
+                                    <i class="fas fa-paper-plane mr-1.5"></i> Demander par courriel
+                                </a>
+                                <a href="tel:+15144488609" class="inline-flex justify-center items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-blue-900 border border-blue-200 rounded-lg text-xs font-bold transition-all">
+                                    <i class="fas fa-phone-alt mr-1.5"></i> Appeler l'étude
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="pt-2 border-t border-blue-100 flex flex-col sm:flex-row gap-3">
-                        <!-- Demander le déblocage par email -->
-                        <a id="btnMailUnblock" href="#" class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-3 rounded-lg transition-all flex items-center justify-center space-x-2">
-                            <i class="fas fa-envelope"></i>
-                            <span>Demander par courriel</span>
-                        </a>
-                        
-                        <!-- Contacter par téléphone -->
-                        <!-- <a href="tel:5140000000" class="flex-1 text-center bg-white border border-blue-300 hover:bg-blue-100 text-blue-800 text-xs font-bold py-2.5 px-3 rounded-lg transition-all flex items-center justify-center space-x-2">
-                            <i class="fas fa-phone-alt"></i>
-                            <span>Appeler l'étude</span>
-                        </a> -->
                     </div>
                 </div>
 
@@ -171,13 +161,13 @@
         </div>
     </div>
 
-    <!-- CONTENU PRINCIPAL (Masqué avant connexion) -->
+    <!-- CONTENU PRINCIPAL -->
     <div id="appContent" class="hidden flex-grow flex flex-col">
         <header class="bg-white border-b py-6">
             <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
                 <h1 class="text-2xl font-bold text-gray-800">ELSIE MONTCHO <span style="color: var(--notaire-blue);">NOTAIRE INC.</span></h1>
                 <div class="flex items-center space-x-4">
-                    <div class="text-sm text-gray-500 uppercase tracking-widest hidden md:block">Portail de transmission</div>
+                    <div id="portalLabel" class="text-sm text-gray-500 uppercase tracking-widest hidden md:block">Portail de transmission</div>
                     
                     <!-- BOUTON DE DÉCONNEXION -->
                     <button type="button" onclick="logout()" class="text-red-600 hover:text-red-800 font-bold text-sm flex items-center space-x-1.5 border border-red-200 hover:border-red-400 px-3.5 py-1.5 rounded-lg transition-all bg-red-50 hover:bg-red-100">
@@ -189,10 +179,11 @@
         </header>
 
         <main class="flex-grow py-8 px-4">
-            <div class="max-w-4xl mx-auto">
+            <div class="max-w-5xl mx-auto">
                 
+                <!-- NAVIGATION PAR ONGLET -->
                 <div class="flex justify-center mb-8 border-b border-gray-200">
-                    <button id="tab1" class="px-6 py-4 font-semibold step-active transition-all text-sm md:text-base">
+                    <button id="tab1" onclick="goToStep1()" class="px-6 py-4 font-semibold step-active transition-all text-sm md:text-base">
                         1. Informations personnelles
                     </button>
                     <button id="tab2" class="px-6 py-4 font-semibold text-gray-400 cursor-not-allowed text-sm md:text-base" disabled>
@@ -200,7 +191,8 @@
                     </button>
                 </div>
 
-                <div class="bg-white rounded-2xl p-6 md:p-10 card-shadow fade-in">
+                <!-- CONTENEUR PRINCIPAL DU PORTAIL CLIENT -->
+                <div id="clientPortalContainer" class="bg-white rounded-2xl p-6 md:p-10 card-shadow fade-in">
                     <form id="notaryForm">
                         
                         <!-- ÉTAPE 1 -->
@@ -259,7 +251,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Courriel *</label>
-                                    <input type="email" id="email" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="exemple@courriel.com">
+                                    <input type="email" id="email" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="exemple@courriel.com" readonly>
                                 </div>
                             </div>
 
@@ -283,11 +275,23 @@
                                 <label class="block text-xs font-bold text-gray-500 uppercase mb-2 text-[#1346d4]">Type de dossier concerné *</label>
                                 <select id="dossierType" onchange="generateUploadFields()" required class="form-input w-full p-4 border-2 border-gray-100 rounded-xl bg-gray-50 font-semibold text-gray-700">
                                     <option value="" disabled selected>Veuillez choisir un type de dossier...</option>
-                                    <option value="recherche">Recherche testamentaire</option>
-                                    <option value="testament">Testament / Mandat</option>
-                                    <option value="achat">Achat / Vente</option>
                                     <option value="refinancement">Refinancement d'hypothèque</option>
+                                    <option value="achat">Achat de propriété</option>
+                                    <option value="vente">Vente de propriété</option>
+                                    <option value="testament">Testament / Mandat de protection</option>
                                 </select>
+                            </div>
+
+                            <!-- BANDEAU EXPLICATIF DE DÉPÔT MULTIPLE (S'affiche dynamiquement) -->
+                            <div id="instructionBanner" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-5 mb-8 flex items-start gap-4 fade-in">
+                                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0 text-lg">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="text-xs text-blue-900 leading-relaxed">
+                                    <p class="font-bold text-sm mb-1">Consignes importantes pour la transmission :</p>
+                                    <p class="mb-2"><strong>Ne regroupez plus vos fichiers dans un seul PDF et ne les envoyez pas par courriel !</strong> Afin de sécuriser et d'accélérer l'analyse de votre dossier par Me Montcho, veuillez téléverser chaque pièce justificative individuellement dans sa case réservée ci-dessous.</p>
+                                    <p class="text-[11px] text-blue-700 font-medium">⚠️ Les documents doivent être numérisés de préférence en format PDF clair et lisible, au moins 72 heures avant votre rendez-vous.</p>
+                                </div>
                             </div>
 
                             <div id="uploadContainer" class="hidden">
@@ -325,20 +329,43 @@
     </div>
 
     <script>
-        // CONFIGURATION DES FLUXS (REMPLIR L'URL DU FLUX DU JOUR 2)
         const LOGIN_FLOW_URL = "https://defaultf6d76df9c0274617a6c3e78ea3e501.e1.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/16703c30ec7f4cfe8f98ef7490ceec90/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZhLk12ChypZ_vPkQDEjpH7nJWOmHpZE1vkzHP7ds49k"; 
-        
-        // URL du flux Jour 1 d'origine (Conserver à l'identique pour l'étape 2)
         const SUBMIT_FLOW_URL = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc";
 
+        // CONFIGURATION DES DOCUMENTS REQUIS AJUSTÉE AVEC VOS LISTES OFFICIELLES
         const config = {
-            recherche: ["Pièce d'identité 1", "Pièce d'identité 2", "Certificat de décès", "Recherche testamentaire Chambre des Notaires", "Recherche testamentaire Barreau"],
-            testament: ["Pièce d'identité 1", "Pièce d'identité 2", "Ancien testament (si applicable)", "Liste des biens"],
-            achat: ["Pièce d'identité 1", "Pièce d'identité 2", "Photo", "Preuve de votre statut au Canada", "Etat matrimonial", "Police d'assurance habitation avant la vente"],
-            refinancement: ["Pièce d'identité 1(recto)", "Pièce d'identité 2(verso)", "Photo", "Police d'assurance habitation(CAISSE DESJARDINS DE HULL-AYLMER)", "Preuve de votre statut au Canada", "Ancien relevé d’hypothèque(CAISSE DESJARDINS DE HULL-AYLMER)", "Etat matrimonial", "Confirmation de paiement à jour des comptes de taxes scolaires et taxes municipales"]
+            refinancement: [
+                "Copie d'un ancien relevé d'hypothèque (Banque Nationale du Canada)",
+                "Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1",
+                "Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1",
+                "Preuve d'emploi récente et employeur (Lettre d'emploi ou talon de paie)",
+                "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",
+                "Police d'assurance habitation (Créancier hypothécaire : Banque Nationale du Canada)",
+                "Comptes de taxes scolaires et municipales à jour (avec confirmation de paiement)"
+            ],
+            achat: [
+                "Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1",
+                "Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1",
+                "Preuve de statut légal au Canada (Citoyenneté, RP, Permis valide)",
+                "Preuve d'emploi récente et employeur (Lettre d'emploi ou talon de paie)",
+                "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",
+                "Police d'assurance habitation (Date d'effet projetée : 02 juillet 2026, créancier : Banque Nationale du Canada)"
+            ],
+            vente: [
+                "Copie de votre ancien relevé d'hypothèque immobilière (Caisse Desjardins de Lachine)",
+                "Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1",
+                "Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1",
+                "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",
+                "Copie des anciens titres de propriété et certificat de localisation"
+            ],
+            testament: [
+                "Pièce d'identité 1 (Recto et Verso)",
+                "Pièce d'identité 2 (Recto et Verso)",
+                "Ancien testament rédigé (si applicable)",
+                "Bilan de votre patrimoine sommaire (Biens et comptes majeurs)"
+            ]
         };
 
-        // GESTIONNAIRE DE NOTIFICATIONS (Alternative aux alerts par défaut)
         function showNotification(message) {
             const toast = document.getElementById('toastNotification');
             const text = document.getElementById('toastText');
@@ -357,47 +384,39 @@
             }, 4500);
         }
 
-        // DECONNEXION DU PORTAIL CLIENT
         function logout() {
-            // Réinitialisation sécurisée de tous les champs de saisie de l'espace de transmission
             document.getElementById('notaryForm').reset();
             document.getElementById('loginForm').reset();
             
-            // Masquage et nettoyage du sélecteur de fichiers de l'étape 2
             document.getElementById('uploadContainer').classList.add('hidden');
+            document.getElementById('instructionBanner').classList.add('hidden');
             document.getElementById('uploadArea').innerHTML = '';
             document.getElementById('dossierType').selectedIndex = 0;
 
-            // Masquer l'aide au blocage au cas où
+            document.getElementById('loginError').classList.add('hidden');
             document.getElementById('blockedAssistance').classList.add('hidden');
 
-            // Retour automatique visuel à l'étape 1 du formulaire
             goToStep1();
 
-            // Masquer l'espace de dépôt et réafficher l'écran d'identification
             document.getElementById('appContent').classList.add('hidden');
             document.getElementById('loginGate').classList.remove('hidden');
             
             showNotification("Vous avez été déconnecté avec succès.");
         }
-
-        // ÉTAPE INTERMEDIAIRE JOUR 2 : CONNEXION ET APPEL DU FLUX
+        
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const loginError = document.getElementById('loginError');
             const loginErrorText = document.getElementById('loginErrorText');
             const blockedAssistance = document.getElementById('blockedAssistance');
-            const btnMailUnblock = document.getElementById('btnMailUnblock');
+            const assistanceMailBtn = document.getElementById('assistanceMailBtn');
             const loading = document.getElementById('loading');
-            const loadingText = document.getElementById('loadingText');
             
             const dossier = document.getElementById('loginFileNumber').value.trim();
             const email = document.getElementById('loginEmail').value.trim();
 
             loginError.classList.add('hidden');
             blockedAssistance.classList.add('hidden');
-            
-            loadingText.innerHTML = "Vérification de vos identifiants de sécurité...<br><span class='text-xs font-normal text-gray-500'>Veuillez patienter.</span>";
             loading.style.display = 'flex';
 
             try {
@@ -415,32 +434,25 @@
                     : null;
 
                 if (response.status === 200) {
-                    // Succès de l'identification : On masque la passerelle et on injecte les données pré-validées
                     document.getElementById('loginGate').classList.add('hidden');
                     document.getElementById('appContent').classList.remove('hidden');
                     
-                    // Remplissage automatique et verrouillage des clés
                     document.getElementById('email').value = email;
                     document.getElementById('fileNumber').value = dossier;
                 } else if (response.status === 403) {
-                    // COMPTE BLOQUÉ : Affichage de l'erreur + de l'encadré d'assistance intelligente
-                    loginErrorText.innerText = data?.message || "Accès bloqué. Ce dossier a été verrouillé après 3 échecs.";
+                    loginErrorText.innerText = data?.message || "Accès suspendu par sécurité après 3 échecs. Veuillez contacter l'étude.";
                     loginError.classList.remove('hidden');
                     
-                    // Génération dynamique du lien de messagerie pré-rempli (mailto) pour faciliter la demande du client
-                    const destinataireEtude = "manakel259451@gmail.com"; // Courriel de l'étude
-                    const sujetCourriel = encodeURIComponent(`Demande de déblocage - Dossier ${dossier}`);
-                    const corpsCourriel = encodeURIComponent(`Bonjour,\n\nMon espace de dépôt de pièces pour le dossier "${dossier}" est actuellement verrouillé après plusieurs tentatives de saisie.\n\nJe vous prie de bien vouloir réinitialiser mon accès.\n\nCordialement.`);
+                    const subject = encodeURIComponent(`Demande de déblocage — Dossier ${dossier}`);
+                    const body = encodeURIComponent(`Bonjour,\n\nMon portail de transmission de pièces a été suspendu par sécurité après 3 tentatives infructueuses.\n\nJe sollicite votre assistance pour débloquer mon compte.\n\nNuméro de dossier concerné : ${dossier}\nCourriel d'authentification : ${email}\n\nMerci pour votre aide,\nCordialement.`);
                     
-                    btnMailUnblock.setAttribute('href', `mailto:${destinataireEtude}?subject=${sujetCourriel}&body=${corpsCourriel}`);
-                    
+                    assistanceMailBtn.href = `mailto:notaire@elsiemontchosai.com?subject=${subject}&body=${body}`;
                     blockedAssistance.classList.remove('hidden');
+
                 } else if (response.status === 401 || response.status === 404) {
-                    // Erreurs d'identification simples (compteur d'échecs incrémenté côté serveur)
                     loginErrorText.innerText = data?.message || "Numéro de dossier ou adresse courriel invalide.";
                     loginError.classList.remove('hidden');
                 } else {
-                    // Autres erreurs génériques
                     loginErrorText.innerText = "Une erreur système s'est produite. Veuillez réessayer ultérieurement.";
                     loginError.classList.remove('hidden');
                 }
@@ -455,6 +467,7 @@
         function generateUploadFields() {
             const type = document.getElementById('dossierType').value;
             const container = document.getElementById('uploadContainer');
+            const instructionBanner = document.getElementById('instructionBanner');
             const area = document.getElementById('uploadArea');
             
             area.innerHTML = '';
@@ -468,11 +481,15 @@
                             <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xs mr-3">${index + 1}</div>
                             <span class="text-sm font-semibold text-gray-700">${docName}</span>
                         </div>
-                        <input type="file" class="doc-input text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" data-label="${docName}">
+                        <input type="file" class="doc-input text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" data-label="${docName}" required>
                     `;
                     area.appendChild(div);
                 });
                 container.classList.remove('hidden');
+                instructionBanner.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+                instructionBanner.classList.add('hidden');
             }
         }
 
@@ -504,7 +521,6 @@
             reader.onerror = error => reject(error);
         });
 
-        // ENVOI DU DOSSIER FINAL (Jour 1 d'origine)
         document.getElementById('notaryForm').onsubmit = async (e) => {
             e.preventDefault();
             const loading = document.getElementById('loading');

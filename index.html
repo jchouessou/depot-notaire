@@ -137,7 +137,7 @@
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                                 <i class="fas fa-folder-open"></i>
                             </span>
-                            <input type="text" id="loginFileNumber" required class="form-input w-full pl-10 p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0012 - DOSSOU">
+                            <input type="text" id="loginFileNumber" required class="form-input w-full pl-10 p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0012">
                         </div>
                     </div>
 
@@ -268,7 +268,7 @@
                             
                             <div class="mb-6">
                                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier *</label>
-                                <input type="text" id="fileNumber" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0010 - NOM" readonly>
+                                <input type="text" id="fileNumber" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0010" readonly>
                             </div>
 
                             <div class="mb-8">
@@ -282,14 +282,14 @@
                                 </select>
                             </div>
 
-                            <!-- BANDEAU EXPLICATIF DE DÉPÔT MULTIPLE (S'affiche dynamiquement) -->
+                            <!-- BANDEAU EXPLICATIF DE DÉPÔT MULTIPLE -->
                             <div id="instructionBanner" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-5 mb-8 flex items-start gap-4 fade-in">
                                 <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0 text-lg">
                                     <i class="fas fa-info-circle"></i>
                                 </div>
                                 <div class="text-xs text-blue-900 leading-relaxed">
                                     <p class="font-bold text-sm mb-1">Consignes importantes pour la transmission :</p>
-                                    <p class="mb-2"><strong>Ne regroupez plus vos fichiers dans un seul PDF et ne les envoyez pas par courriel !</strong> Afin de sécuriser et d'accélérer l'analyse de votre dossier par Me Montcho, veuillez téléverser chaque pièce justificative individuellement dans sa case réservée ci-dessous.</p>
+                                    <p class="mb-2"><strong>Ne regroupez plus vos fichiers dans un seul PDF et ne les envoyez plus par courriel !</strong> Afin de sécuriser et d'accélérer l'analyse de votre dossier par Me Montcho, veuillez téléverser chaque pièce justificative individuellement dans sa case réservée ci-dessous.</p>
                                     <p class="text-[11px] text-blue-700 font-medium">⚠️ Les documents doivent être numérisés de préférence en format PDF clair et lisible, au moins 72 heures avant votre rendez-vous.</p>
                                 </div>
                             </div>
@@ -332,15 +332,15 @@
         const LOGIN_FLOW_URL = "https://defaultf6d76df9c0274617a6c3e78ea3e501.e1.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/16703c30ec7f4cfe8f98ef7490ceec90/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZhLk12ChypZ_vPkQDEjpH7nJWOmHpZE1vkzHP7ds49k"; 
         const SUBMIT_FLOW_URL = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc";
 
-        // CONFIGURATION DES DOCUMENTS REQUIS AJUSTÉE AVEC VOS LISTES OFFICIELLES
+        // CONFIGURATION SIMPLIFIÉE DES DOCUMENTS REQUIS SANS MENTION DE BANQUES SPÉCIFIQUES
         const config = {
             refinancement: [
-                "Copie d'un ancien relevé d'hypothèque (Banque Nationale du Canada)",
+                "Copie de votre dernier relevé d'hypothèque avec la banque concernée",
                 "Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1",
                 "Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1",
                 "Preuve d'emploi récente et employeur (Lettre d'emploi ou talon de paie)",
                 "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",
-                "Police d'assurance habitation (Créancier hypothécaire : Banque Nationale du Canada)",
+                "Police d'assurance habitation indiquant la banque concernée comme créancier",
                 "Comptes de taxes scolaires et municipales à jour (avec confirmation de paiement)"
             ],
             achat: [
@@ -349,10 +349,10 @@
                 "Preuve de statut légal au Canada (Citoyenneté, RP, Permis valide)",
                 "Preuve d'emploi récente et employeur (Lettre d'emploi ou talon de paie)",
                 "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",
-                "Police d'assurance habitation (Date d'effet projetée : 02 juillet 2026, créancier : Banque Nationale du Canada)"
+                "Police d'assurance habitation en vigueur indiquant votre nouvelle banque comme créancier"
             ],
             vente: [
-                "Copie de votre ancien relevé d'hypothèque immobilière (Caisse Desjardins de Lachine)",
+                "Copie de votre dernier relevé d'hypothèque immobilière (avec la banque à rembourser)",
                 "Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1",
                 "Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1",
                 "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",

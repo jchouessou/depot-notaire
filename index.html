@@ -323,8 +323,11 @@
                 <i class="fas fa-check"></i>
             </div>
             <h3 class="text-2xl font-black mb-3 text-gray-800">C'est envoyé !</h3>
-            <p class="text-gray-500 leading-relaxed mb-8">Vos documents ont été transmis. Nous reviendrons vers vous rapidement.</p>
-            <button onclick="location.reload()" class="btn-notaire text-white w-full py-4 rounded-2xl font-bold text-lg shadow-lg">Fermer</button>
+            <p class="text-gray-500 leading-relaxed mb-6">Vos documents ont été transmis avec succès à l'étude.</p>
+            <div class="flex flex-col gap-3">
+                <button type="button" onclick="keepSession()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-full py-3.5 rounded-2xl font-bold text-sm transition-all">Déposer d'autres pièces</button>
+                <button type="button" onclick="location.reload()" class="btn-notaire text-white w-full py-3.5 rounded-2xl font-bold text-sm shadow-lg">Quitter et se déconnecter</button>
+            </div>
         </div>
     </div>
 
@@ -481,7 +484,7 @@
                             <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xs mr-3">${index + 1}</div>
                             <span class="text-sm font-semibold text-gray-700">${docName}</span>
                         </div>
-                        <input type="file" class="doc-input text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" data-label="${docName}" required>
+                        <input type="file" class="doc-input text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" data-label="${docName}">
                     `;
                     area.appendChild(div);
                 });
@@ -521,6 +524,19 @@
             reader.onerror = error => reject(error);
         });
 
+        function keepSession() {
+            // Ferme le modal de succès
+            document.getElementById('successModal').classList.add('hidden');
+            
+            // Vide la sélection des champs de fichiers pour éviter les envois doublons
+            const inputs = document.querySelectorAll('.doc-input');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+            
+            showNotification("Dépôt enregistré ! Vous pouvez continuer à envoyer vos autres pièces.");
+        }
+
         document.getElementById('notaryForm').onsubmit = async (e) => {
             e.preventDefault();
             const loading = document.getElementById('loading');
@@ -543,6 +559,13 @@
                         filePromises.push(toBase64(renamedFile));
                     }
                 });
+
+                if (filePromises.length === 0) {
+                    showNotification("Veuillez sélectionner au moins un document avant d'envoyer.");
+                    loading.style.display = 'none';
+                    btn.disabled = false;
+                    return;
+                }
 
                 const filesData = await Promise.all(filePromises);
 

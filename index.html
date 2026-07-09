@@ -14,7 +14,7 @@
 
         body {
             background-color: var(--bg-gray);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         }
 
         .step-active {
@@ -137,7 +137,7 @@
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                                 <i class="fas fa-folder-open"></i>
                             </span>
-                            <input type="text" id="loginFileNumber" required class="form-input w-full pl-10 p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0012">
+                            <input type="text" id="loginFileNumber" required class="form-input w-full pl-10 p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0003 - Ange BALOGOUN">
                         </div>
                     </div>
 
@@ -202,17 +202,17 @@
                             </h2>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-                                <!-- Nom et Prénom -->
+                                <!-- Nom et Prénom (Pre-fill & Readonly) -->
                                 <div>
                                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nom *</label>
-                                    <input type="text" id="lastName" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Votre nom de famille">
+                                    <input type="text" id="lastName" readonly required class="form-input w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 font-medium cursor-not-allowed" placeholder="Votre nom de famille">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Prénom(s)</label>
-                                    <input type="text" id="firstName" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Vos prénoms">
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Prénom(s) *</label>
+                                    <input type="text" id="firstName" readonly required class="form-input w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 font-medium cursor-not-allowed" placeholder="Vos prénoms">
                                 </div>
 
-                                <!-- Date de Naissance et NAS -->
+                                <!-- Date de Naissance (Limitation -18 ans et cachée) -->
                                 <div>
                                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date de naissance *</label>
                                     <input type="date" id="dob" required class="form-input w-full p-3 border border-gray-200 rounded-lg">
@@ -222,21 +222,27 @@
                                     <input type="text" id="nas" class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="000 000 000">
                                 </div>
 
-                                <!-- Adresse et Ville -->
+                                <!-- Adresse civique -->
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Adresse *</label>
-                                    <input type="text" id="address" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Numéro civique et rue">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ville *</label>
-                                    <input type="text" id="city" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: Montréal">
+                                    <input type="text" id="address" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Numéro civique et rue (ex: 45 place Charles-Le Moyne)">
                                 </div>
 
-                                <!-- Province et Code Postal -->
+                                <!-- PROVINCE (Placée avant la ville - Dropdown Canada) -->
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Province *</label>
+                                    <select id="province" required onchange="handleProvinceChange()" class="form-input w-full p-3 border border-gray-200 rounded-lg">
+                                        <!-- Injecté par JS, Québec par défaut -->
+                                    </select>
+                                </div>
+
+                                <!-- VILLE & CODE POSTAL (Dropdowns & Auto-fill) -->
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Province *</label>
-                                        <input type="text" id="province" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: Québec">
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ville *</label>
+                                        <select id="city" required onchange="handleCityChange()" class="form-input w-full p-3 border border-gray-200 rounded-lg">
+                                            <!-- Dynamique -->
+                                        </select>
                                     </div>
                                     <div>
                                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Code postal *</label>
@@ -266,15 +272,27 @@
                         <div id="step2Content" class="hidden">
                             <h2 class="text-xl font-bold mb-4 text-gray-800">Détails du dossier</h2>
                             
-                            <div class="mb-6">
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier *</label>
-                                <input type="text" id="fileNumber" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0010" readonly>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Numéro de dossier *</label>
+                                    <input type="text" id="fileNumber" required class="form-input w-full p-3 border border-gray-200 rounded-lg" placeholder="Ex: 26EM0010" readonly>
+                                </div>
+                                
+                                <!-- SÉLECTEUR DU NOMBRE DE PERSONNES CONCERNÉES (DYNAMIQUE) -->
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1 text-[#1346d4]">Nombre de signataires / personnes *</label>
+                                    <select id="peopleCount" onchange="generateUploadFields()" class="form-input w-full p-3 border border-gray-200 rounded-lg font-bold text-gray-700 bg-blue-50">
+                                        <option value="1" selected>1 personne (Seule)</option>
+                                        <option value="2">2 personnes (Co-signataires / Couple / Associés)</option>
+                                    </select>
+                                </div>
                             </div>
 
+                            <!-- TYPE DE DOSSIER (Sélectionné automatiquement selon la connexion et désactivé) -->
                             <div class="mb-8">
                                 <label class="block text-xs font-bold text-gray-500 uppercase mb-2 text-[#1346d4]">Type de dossier concerné *</label>
-                                <select id="dossierType" onchange="generateUploadFields()" required class="form-input w-full p-4 border-2 border-gray-100 rounded-xl bg-gray-50 font-semibold text-gray-700">
-                                    <option value="" disabled selected>Veuillez choisir un type de dossier...</option>
+                                <select id="dossierType" disabled required class="form-input w-full p-4 border-2 border-gray-100 rounded-xl bg-gray-50 font-semibold text-gray-700 cursor-not-allowed">
+                                    <option value="" disabled selected>Chargement du dossier...</option>
                                     <option value="refinancement">Refinancement d'hypothèque</option>
                                     <option value="achat">Achat de propriété</option>
                                     <option value="vente">Vente de propriété</option>
@@ -289,7 +307,7 @@
                                 </div>
                                 <div class="text-xs text-blue-900 leading-relaxed">
                                     <p class="font-bold text-sm mb-1">Consignes importantes pour la transmission :</p>
-                                    <p class="mb-2"><strong>Ne regroupez plus vos fichiers dans un seul PDF et ne les envoyez plus par courriel !</strong> Afin de sécuriser et d'accélérer l'analyse de votre dossier par Me Montcho, veuillez téléverser chaque pièce justificative individuellement dans sa case réservée ci-dessous.</p>
+                                    <p class="mb-2"><strong>Ne regroupez plus vos fichiers dans un seul PDF et ne les envoyez plus par courriel !</strong> Afin de sécuriser et d'accélérer l'analyse de votre dossier par L'équipe de Me Montcho, veuillez téléverser chaque pièce justificative individuellement dans sa case réservée ci-dessous.</p>
                                     <p class="text-[11px] text-blue-700 font-medium">⚠️ Les documents doivent être numérisés de préférence en format PDF clair et lisible, au moins 72 heures avant votre rendez-vous.</p>
                                 </div>
                             </div>
@@ -333,41 +351,114 @@
 
     <script>
         const LOGIN_FLOW_URL = "https://defaultf6d76df9c0274617a6c3e78ea3e501.e1.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/16703c30ec7f4cfe8f98ef7490ceec90/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZhLk12ChypZ_vPkQDEjpH7nJWOmHpZE1vkzHP7ds49k"; 
-        const SUBMIT_FLOW_URL = "https://defaultf6d76df9c0274617a6c3e78ea3e501.e1.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/06/workflows/aaa2d4d0fbeb4a3581ce250c39045c93/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mqbxUlkR09zG_44ijO4ZW5xQCjaELPvEJVkAYdKlXwM";
+        const SUBMIT_FLOW_URL = "https://10307abea251e828a4bf9838257cbb.f6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f3f5c187b5540b0951a78f90a6cda45/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZtnbNAql8WVFvJaVHVE3RA-Dd0_kmjRdpKt65W4d5zc";
 
-        // CONFIGURATION SIMPLIFIÉE DES DOCUMENTS REQUIS SANS MENTION DE BANQUES SPÉCIFIQUES
-        const config = {
-            refinancement: [
-                "Copie de votre dernier relevé d'hypothèque avec la banque concernée",
-                "Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1",
-                "Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1",
-                "Preuve d'emploi récente et employeur (Lettre d'emploi ou talon de paie)",
-                "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",
-                "Police d'assurance habitation indiquant la banque concernée comme créancier",
-                "Comptes de taxes scolaires et municipales à jour (avec confirmation de paiement)"
-            ],
-            achat: [
-                "Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1",
-                "Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1",
-                "Preuve de statut légal au Canada (Citoyenneté, RP, Permis valide)",
-                "Preuve d'emploi récente et employeur (Lettre d'emploi ou talon de paie)",
-                "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",
-                "Police d'assurance habitation en vigueur indiquant votre nouvelle banque comme créancier"
-            ],
-            vente: [
-                "Copie de votre dernier relevé d'hypothèque immobilière (avec la banque à rembourser)",
-                "Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1",
-                "Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1",
-                "Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)",
-                "Copie des anciens titres de propriété et certificat de localisation"
-            ],
-            testament: [
-                "Pièce d'identité 1 (Recto et Verso)",
-                "Pièce d'identité 2 (Recto et Verso)",
-                "Ancien testament rédigé (si applicable)",
-                "Bilan de votre patrimoine sommaire (Biens et comptes majeurs)"
-            ]
+        // BASE DES PROVINCES ET VILLES DU CANADA AVEC EXEMPLES DE CODE POSTAL
+        const locationDatabase = {
+            "Québec": {
+                "Longueuil": "J4K 5G5",
+                "Montréal": "H2Y 1C6",
+                "Laval": "H7V 3N4",
+                "Gatineau": "J8X 3X5",
+                "Sherbrooke": "J1H 5N4",
+                "Brossard": "J4Z 3T4",
+                "Saint-Hubert": "J3Y 5M4",
+                "Québec (Ville)": "G1R 4P4"
+            },
+            "Ontario": {
+                "Toronto": "M5V 3L9",
+                "Ottawa": "K1P 1A1",
+                "Mississauga": "L5B 2C9"
+            },
+            "Alberta": {
+                "Calgary": "T2P 2M5",
+                "Edmonton": "T5J 2R7"
+            },
+            "Colombie-Britannique": {
+                "Vancouver": "V6B 4Y8",
+                "Victoria": "V8W 1P5"
+            }
         };
+
+        // SETUP INITIAL AU CHARGEMENT DE LA PAGE
+        window.addEventListener('DOMContentLoaded', () => {
+            // Limiter la date de naissance aux personnes majeures (18 ans et plus)
+            const dobInput = document.getElementById('dob');
+            const today = new Date();
+            const maxYear = today.getFullYear() - 18;
+            const maxMonth = String(today.getMonth() + 1).padStart(2, '0');
+            const maxDay = String(today.getDate()).padStart(2, '0');
+            dobInput.max = `${maxYear}-${maxMonth}-${maxDay}`;
+
+            // Initialiser les provinces canadiennes
+            const provinceSelect = document.getElementById('province');
+            provinceSelect.innerHTML = '';
+            Object.keys(locationDatabase).forEach(prov => {
+                const option = document.createElement('option');
+                option.value = prov;
+                option.text = prov;
+                if (prov === "Québec") option.selected = true; // Québec par défaut
+                provinceSelect.appendChild(option);
+            });
+            
+            // Lancer la première mise à jour pour le Québec
+            handleProvinceChange();
+        });
+
+        // GESTION CASCADING PROVINCE -> VILLE
+        function handleProvinceChange() {
+            const province = document.getElementById('province').value;
+            const citySelect = document.getElementById('city');
+            citySelect.innerHTML = '';
+
+            if (locationDatabase[province]) {
+                Object.keys(locationDatabase[province]).forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.text = city;
+                    citySelect.appendChild(option);
+                });
+            }
+            // Mettre à jour automatiquement le code postal
+            handleCityChange();
+        }
+
+        // AUTO-FILL CODE POSTAL
+        function handleCityChange() {
+            const province = document.getElementById('province').value;
+            const city = document.getElementById('city').value;
+            const postalCodeInput = document.getElementById('postalCode');
+
+            if (locationDatabase[province] && locationDatabase[province][city]) {
+                postalCodeInput.value = locationDatabase[province][city];
+            } else {
+                postalCodeInput.value = '';
+            }
+        }
+
+        // RECHERCHE D'ADRESSE ET VÉRIFICATION VIA GEOCODING CANADA (NETTOYÉ POUR LES LOGEMENTS/SUITES)
+        async function verifyAddress(address, city, province) {
+            // Expression régulière pour nettoyer les informations secondaires (Apt, Suite, Bureau, Fl, Unit, etc.)
+            let cleanAddress = address
+                .replace(/\b(apt|suite|ste|bureau|bur|unit|u|apt\.|ste\.|bur\.)\s*\d+/gi, '') // Supprime "Suite 100", "Apt 4", etc.
+                .replace(/#\s*\d+/g, '') // Supprime "#4" ou "#12"
+                .replace(/,\s*$/, '') // Supprime les virgules traînantes à la fin
+                .trim();
+
+            const query = encodeURIComponent(`${cleanAddress}, ${city}, ${province}, Canada`);
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&limit=1`);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    return { valid: true, formatted: data[0].display_name };
+                }
+                return { valid: false };
+            } catch (error) {
+                console.warn("Erreur API de vérification d'adresse, contournement actif.");
+                return { valid: true }; // Fallback de secours en cas de panne réseau
+            }
+        }
 
         function showNotification(message) {
             const toast = document.getElementById('toastNotification');
@@ -395,6 +486,7 @@
             document.getElementById('instructionBanner').classList.add('hidden');
             document.getElementById('uploadArea').innerHTML = '';
             document.getElementById('dossierType').selectedIndex = 0;
+            document.getElementById('peopleCount').value = "1";
 
             document.getElementById('loginError').classList.add('hidden');
             document.getElementById('blockedAssistance').classList.add('hidden');
@@ -407,6 +499,7 @@
             showNotification("Vous avez été déconnecté avec succès.");
         }
         
+        // IDENTIFICATION ET EXTRACTION AUTO DE LA FICHE CLIENT
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const loginError = document.getElementById('loginError');
@@ -436,12 +529,25 @@
                     ? await response.json() 
                     : null;
 
-                if (response.status === 200) {
+                if (response.status === 200 && data) {
                     document.getElementById('loginGate').classList.add('hidden');
                     document.getElementById('appContent').classList.remove('hidden');
                     
                     document.getElementById('email').value = email;
                     document.getElementById('fileNumber').value = dossier;
+
+                    // PRÉ-REMPLIR LES CHAMPS NOM/PRÉNOM DEPUIS SHAREPOINT
+                    document.getElementById('lastName').value = data.lastName || '';
+                    document.getElementById('firstName').value = data.firstName || '';
+
+                    // PRÉ-SÉLECTIONNER LE TYPE DE DOSSIER DEPUIS SHAREPOINT ET LE VERROUILLER
+                    const dossierTypeSelect = document.getElementById('dossierType');
+                    if (data.dossierType) {
+                        const formattedType = data.dossierType.toLowerCase().trim();
+                        dossierTypeSelect.value = formattedType;
+                        generateUploadFields(); // Générer automatiquement les champs de documents associés
+                    }
+
                 } else if (response.status === 403) {
                     loginErrorText.innerText = data?.message || "Accès suspendu par sécurité après 3 échecs. Veuillez contacter l'étude.";
                     loginError.classList.remove('hidden');
@@ -467,16 +573,86 @@
             }
         };
 
+        // GÉNÉRATION DYNAMIQUE DES PIÈCES JOINTE SELON LE DOSSIER ET LE NOMBRE DE PERSONNES (MODIFIÉ)
         function generateUploadFields() {
             const type = document.getElementById('dossierType').value;
+            const peopleCount = parseInt(document.getElementById('peopleCount').value) || 1;
             const container = document.getElementById('uploadContainer');
             const instructionBanner = document.getElementById('instructionBanner');
             const area = document.getElementById('uploadArea');
             
             area.innerHTML = '';
             
-            if (config[type]) {
-                config[type].forEach((docName, index) => {
+            if (type) {
+                let dynamicList = [];
+
+                if (type === 'refinancement') {
+                    dynamicList.push("Copie de votre dernier relevé d'hypothèque avec la banque concernée");
+                    
+                    // PIÈCES IDENTITÉ PERSONNE 1
+                    dynamicList.push("Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1");
+                    dynamicList.push("Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1");
+                    
+                    // PIÈCES IDENTITÉ PERSONNE 2 SI CONCERNÉ
+                    if (peopleCount === 2) {
+                        dynamicList.push("Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 2");
+                        dynamicList.push("Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 2");
+                    }
+
+                    dynamicList.push("Preuve d'emploi récente et employeur (Lettre d'emploi ou talon de paie)");
+                    dynamicList.push("Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)");
+                    dynamicList.push("Police d'assurance habitation indiquant la banque concernée comme créancier");
+                    dynamicList.push("Comptes de taxes scolaires et municipales à jour (avec confirmation de paiement)");
+
+                } else if (type === 'achat') {
+                    // PIÈCES IDENTITÉ PERSONNE 1
+                    dynamicList.push("Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1");
+                    dynamicList.push("Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1");
+                    
+                    // PIÈCES IDENTITÉ PERSONNE 2 SI CONCERNÉ
+                    if (peopleCount === 2) {
+                        dynamicList.push("Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 2");
+                        dynamicList.push("Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 2");
+                    }
+
+                    dynamicList.push("Preuve de statut légal au Canada (Citoyenneté, RP, Permis valide)");
+                    dynamicList.push("Preuve d'emploi récente et employeur (Lettre d'emploi ou talon de paie)");
+                    dynamicList.push("Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)");
+                    dynamicList.push("Police d'assurance habitation en vigueur indiquant votre nouvelle banque comme créancier");
+
+                } else if (type === 'vente') {
+                    dynamicList.push("Copie de votre dernier relevé d'hypothèque immobilière (avec la banque à rembourser)");
+                    
+                    // PIÈCES IDENTITÉ PERSONNE 1
+                    dynamicList.push("Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 1");
+                    dynamicList.push("Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 1");
+                    
+                    // PIÈCES IDENTITÉ PERSONNE 2 SI CONCERNÉ
+                    if (peopleCount === 2) {
+                        dynamicList.push("Pièce d'identité 1 recto verso avec photo (Permis ou RAMQ) - Personne 2");
+                        dynamicList.push("Pièce d'identité 2 recto verso avec photo (Permis ou RAMQ) - Personne 2");
+                    }
+
+                    dynamicList.push("Justificatif d'état matrimonial (Certificat mariage, divorce, séparation ou décès)");
+                    dynamicList.push("Copie des anciens titres de propriété et certificat de localisation");
+
+                } else if (type === 'testament') {
+                    // PIÈCES IDENTITÉ PERSONNE 1
+                    dynamicList.push("Pièce d'identité 1 (Recto et Verso) - Personne 1");
+                    dynamicList.push("Pièce d'identité 2 (Recto et Verso) - Personne 1");
+                    
+                    // PIÈCES IDENTITÉ PERSONNE 2 SI CONCERNÉ
+                    if (peopleCount === 2) {
+                        dynamicList.push("Pièce d'identité 1 (Recto et Verso) - Personne 2");
+                        dynamicList.push("Pièce d'identité 2 (Recto et Verso) - Personne 2");
+                    }
+
+                    dynamicList.push("Ancien testament rédigé (si applicable)");
+                    dynamicList.push("Bilan de votre patrimoine sommaire (Biens et comptes majeurs)");
+                }
+
+                // Injecter visuellement la liste calculée dans l'interface
+                dynamicList.forEach((docName, index) => {
                     const div = document.createElement('div');
                     div.className = "file-upload-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 fade-in";
                     div.innerHTML = `
@@ -496,11 +672,30 @@
             }
         }
 
-        function goToStep2() {
-            if(!document.getElementById('lastName').value || !document.getElementById('dob').value) {
-                showNotification("Veuillez remplir les informations obligatoires de l'étape 1."); 
+        async function goToStep2() {
+            const addressInput = document.getElementById('address').value.trim();
+            const citySelect = document.getElementById('city').value;
+            const provinceSelect = document.getElementById('province').value;
+
+            if(!document.getElementById('lastName').value || !document.getElementById('dob').value || !addressInput) {
+                showNotification("Veuillez remplir l'ensemble des informations obligatoires de l'étape 1."); 
                 return;
             }
+
+            // VÉRIFICATION EN DIRECT DE L'ADRESSE CANADIENNE
+            const loading = document.getElementById('loading');
+            const loadingText = document.getElementById('loadingText');
+            loadingText.innerHTML = "Analyse et vérification de l'adresse civique...<br><span class='text-xs font-normal text-gray-500'>Veuillez patienter.</span>";
+            loading.style.display = 'flex';
+
+            const addressCheck = await verifyAddress(addressInput, citySelect, provinceSelect);
+            loading.style.display = 'none';
+
+            if (!addressCheck.valid) {
+                showNotification("L'adresse civique saisie est introuvable au Canada. Veuillez corriger l'adresse.");
+                return;
+            }
+
             document.getElementById('step1Content').classList.add('hidden');
             document.getElementById('step2Content').classList.remove('hidden');
             document.getElementById('tab1').classList.replace('step-active', 'text-gray-400');
@@ -525,15 +720,11 @@
         });
 
         function keepSession() {
-            // Ferme le modal de succès
             document.getElementById('successModal').classList.add('hidden');
-            
-            // Vide la sélection des champs de fichiers pour éviter les envois doublons
             const inputs = document.querySelectorAll('.doc-input');
             inputs.forEach(input => {
                 input.value = '';
             });
-            
             showNotification("Dépôt enregistré ! Vous pouvez continuer à envoyer vos autres pièces.");
         }
 
@@ -582,6 +773,7 @@
                     email: document.getElementById('email').value,
                     fileNumber: document.getElementById('fileNumber').value,
                     dossierType: document.getElementById('dossierType').value,
+                    peopleCount: document.getElementById('peopleCount').value, // On passe l'information du nombre de signataires au flux
                     attachments: filesData
                 };
 

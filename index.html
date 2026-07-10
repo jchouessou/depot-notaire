@@ -690,17 +690,16 @@
 
                 } else if (type === 'testament') {
                     // PIÈCES IDENTITÉ PERSONNE 1
-                    dynamicList.push("Pièce d'identité 1 (Recto et Verso) - Personne 1");
-                    dynamicList.push("Pièce d'identité 2 (Recto et Verso) - Personne 1");
+                    dynamicList.push("Pièce d'identité 1 (Permis de conduire, Passeport, RAMQ, etc.) - Personne 1");
+                    dynamicList.push("Pièce d'identité 2 (Permis de conduire, Passeport, RAMQ, etc.) - Personne 1");
                     
                     // PIÈCES IDENTITÉ PERSONNE 2 SI CONCERNÉ
                     if (peopleCount === 2) {
-                        dynamicList.push("Pièce d'identité 1 (Recto et Verso) - Personne 2");
-                        dynamicList.push("Pièce d'identité 2 (Recto et Verso) - Personne 2");
+                        dynamicList.push("Pièce d'identité 1 (Permis de conduire, Passeport, RAMQ, etc.) - Personne 2");
+                        dynamicList.push("Pièce d'identité 2 (Permis de conduire, Passeport, RAMQ, etc.) - Personne 2");
                     }
 
-                    dynamicList.push("Ancien testament rédigé (si applicable)");
-                    dynamicList.push("Bilan de votre patrimoine sommaire (Biens et comptes majeurs)");
+                    dynamicList.push("Formulaire testament et mandat rempli");
                 }
 
                 // Injecter visuellement la liste calculée dans l'interface
